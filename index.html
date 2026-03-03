@@ -17,7 +17,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Tera pura style same rakh diya hai, kuch nahi change kiya UI mein */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary: #6366f1; --primary-dark: #4f46e5; --secondary: #ec4899; --accent: #14b8a6;
@@ -26,8 +25,70 @@
         }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: var(--dark); }
         #root { min-height: 100vh; }
-        /* ... tera pura CSS same hai, yahan se copy-paste kar lena agar edit kar raha hai ... */
-        /* (main ne pura CSS nahi repeat kiya space ke liye, tera original wala hi use kar) */
+        .navbar { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 1.2rem 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; animation: slideDown 0.5s ease-out; }
+        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .logo { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+        .nav-menu { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+        .nav-link { color: var(--dark); text-decoration: none; font-weight: 600; transition: all 0.3s; position: relative; cursor: pointer; }
+        .nav-link:hover { color: var(--primary); transform: translateY(-2px); }
+        .nav-link.active::after { content: ''; position: absolute; bottom: -5px; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 2px; }
+        .btn { padding: 0.75rem 1.8rem; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 0.95rem; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4); }
+        .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-secondary:hover { background: var(--primary); color: white; }
+        .hero { text-align: center; padding: 5rem 2rem; background: white; margin: 2rem; border-radius: 30px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .hero h1 { font-family: 'Outfit', sans-serif; font-size: 4rem; font-weight: 800; margin-bottom: 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
+        .hero p { font-size: 1.4rem; color: var(--gray); margin-bottom: 2.5rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .hero-buttons { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
+        .container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
+        .card { background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); transition: all 0.3s; animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12); }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .influencer-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; padding: 2rem; color: white; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+        .influencer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.1); opacity: 0; transition: opacity 0.3s; }
+        .influencer-card:hover::before { opacity: 1; }
+        .influencer-avatar { width: 100px; height: 100px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 700; margin: 0 auto 1.5rem; border: 4px solid rgba(255, 255, 255, 0.3); }
+        .influencer-name { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .influencer-handle { opacity: 0.9; font-size: 1rem; margin-bottom: 1rem; }
+        .badge { display: inline-block; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin: 0.3rem; }
+        .badge-primary { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); }
+        .badge-success { background: #d1fae5; color: var(--success); }
+        .badge-warning { background: #fef3c7; color: var(--warning); }
+        .stats-row { display: flex; justify-content: space-around; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.2); }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; display: block; }
+        .stat-label { font-size: 0.85rem; opacity: 0.8; margin-top: 0.3rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark); }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 0.9rem 1.2rem; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; font-family: inherit; transition: all 0.3s; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+        .form-textarea { resize: vertical; min-height: 120px; }
+        .search-container { background: white; border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); }
+        .search-bar { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 1rem; margin-bottom: 1.5rem; }
+        .pricing-result { background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 20px; padding: 3rem; color: white; text-align: center; margin-top: 2rem; animation: scaleIn 0.5s ease-out; }
+        @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .price-display { font-size: 4rem; font-weight: 800; margin: 1.5rem 0; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        .stat-card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); text-align: center; transition: all 0.3s; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card-value { font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+        .stat-card-label { color: var(--gray); font-weight: 600; }
+        .loading { text-align: center; padding: 3rem; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 1000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
+        .modal { background: white; border-radius: 24px; padding: 2.5rem; width: 100%; max-width: 440px; box-shadow: 0 30px 80px rgba(0,0,0,0.2); animation: slideUp 0.3s ease; position: relative; }
+        .modal-close { position: absolute; top: 1.2rem; right: 1.5rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray); }
+        .modal h2 { font-family: 'Outfit', sans-serif; font-size: 2rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .modal-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; background: #f1f5f9; border-radius: 12px; padding: 4px; }
+        .modal-tab { flex: 1; padding: 0.6rem; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; background: none; color: var(--gray); transition: all 0.2s; }
+        .modal-tab.active { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .alert-success { background: #d1fae5; color: #065f46; padding: 0.8rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 600; }
+        .alert-error { background: #fee2e2; color: #991b1b; padding: 0.8rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 600; }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .nav-menu { display: none; } .search-bar { grid-template-columns: 1fr; } .card-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -36,19 +97,15 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // API Configuration
         const API_BASE_URL = 'https://promobridge-backend0.onrender.com';
 
-        // Axios interceptor for token (protected routes ke liye)
+        // Token interceptor
         axios.interceptors.request.use(config => {
             const token = localStorage.getItem('pb_token');
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
+            if (token) config.headers.Authorization = `Bearer ${token}`;
             return config;
-        }, error => Promise.reject(error));
+        });
 
-        // Main App Component
         function App() {
             const [currentPage, setCurrentPage] = useState('home');
             const [showAuth, setShowAuth] = useState(false);
@@ -72,7 +129,29 @@
             );
         }
 
-        // Auth Modal (updated with better error handling & token)
+        function Navbar({ currentPage, setCurrentPage, user, setShowAuth, handleLogout }) {
+            return (
+                <nav className="navbar">
+                    <div className="logo" onClick={() => setCurrentPage('home')}>🌉 Promobridge</div>
+                    <ul className="nav-menu">
+                        <li><span className={`nav-link ${currentPage === 'home' ? 'active' : ''}`} onClick={() => setCurrentPage('home')}>Home</span></li>
+                        <li><span className={`nav-link ${currentPage === 'search' ? 'active' : ''}`} onClick={() => setCurrentPage('search')}>Find Influencers</span></li>
+                        <li><span className={`nav-link ${currentPage === 'campaign' ? 'active' : ''}`} onClick={() => setCurrentPage('campaign')}>Create Campaign</span></li>
+                        <li><span className={`nav-link ${currentPage === 'pricing' ? 'active' : ''}`} onClick={() => setCurrentPage('pricing')}>Pricing</span></li>
+                        <li><span className={`nav-link ${currentPage === 'dashboard' ? 'active' : ''}`} onClick={() => setCurrentPage('dashboard')}>Dashboard</span></li>
+                    </ul>
+                    {user ? (
+                        <div style={{display:'flex', alignItems:'center', gap:'1rem'}}>
+                            <span style={{fontWeight:600, color:'var(--primary)'}}>👤 {user.email?.split('@')[0] || 'User'}</span>
+                            <button className="btn btn-secondary" onClick={handleLogout}>Logout</button>
+                        </div>
+                    ) : (
+                        <button className="btn btn-primary" onClick={() => setShowAuth(true)}>Login / Register</button>
+                    )}
+                </nav>
+            );
+        }
+
         function AuthModal({ setShowAuth, setUser }) {
             const [tab, setTab] = useState('login');
             const [form, setForm] = useState({ email: '', password: '', role: 'brand' });
@@ -89,13 +168,12 @@
                     const res = await axios.post(`${API_BASE_URL}/auth/login`, formData, {
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                     });
-                    const token = res.data.access_token || res.data; // backend string token deta hai ya object
+                    const token = res.data.access_token || res.data.token || res.data;
                     localStorage.setItem('pb_token', token);
                     setUser({ email: form.email, role: form.role || 'user', token });
                     setShowAuth(false);
-                    alert('Login successful! 🎉');
                 } catch (e) {
-                    setError(e.response?.data?.detail || e.message || 'Login failed. Check credentials or server.');
+                    setError(e.response?.data?.detail || 'Login failed');
                 }
                 setLoading(false);
             };
@@ -104,10 +182,10 @@
                 setLoading(true); setError(null); setMsg(null);
                 try {
                     await axios.post(`${API_BASE_URL}/auth/register`, form);
-                    setMsg('Account created! Now login.');
+                    setMsg('Registered! Now login.');
                     setTab('login');
                 } catch (e) {
-                    setError(e.response?.data?.detail || 'Registration failed.');
+                    setError(e.response?.data?.detail || 'Registration failed');
                 }
                 setLoading(false);
             };
@@ -116,8 +194,7 @@
                 <div className="modal-overlay" onClick={() => setShowAuth(false)}>
                     <div className="modal" onClick={e => e.stopPropagation()}>
                         <button className="modal-close" onClick={() => setShowAuth(false)}>✕</button>
-                        <h2>🌉 Promobridge</h2>
-                        <p style={{color: 'var(--gray)', marginBottom: '1.5rem'}}>Connect brands with influencers</p>
+                        <h2>Promobridge</h2>
                         <div className="modal-tabs">
                             <button className={`modal-tab ${tab === 'login' ? 'active' : ''}`} onClick={() => setTab('login')}>Login</button>
                             <button className={`modal-tab ${tab === 'register' ? 'active' : ''}`} onClick={() => setTab('register')}>Register</button>
@@ -126,64 +203,39 @@
                         {error && <div className="alert-error">{error}</div>}
                         <div className="form-group">
                             <label className="form-label">Email</label>
-                            <input type="email" className="form-input" placeholder="you@example.com" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
+                            <input type="email" className="form-input" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
                         </div>
                         <div className="form-group">
                             <label className="form-label">Password</label>
-                            <input type="password" className="form-input" placeholder="••••••••" value={form.password} onChange={e => setForm({...form, password: e.target.value})} />
+                            <input type="password" className="form-input" value={form.password} onChange={e => setForm({...form, password: e.target.value})} />
                         </div>
                         {tab === 'register' && (
                             <div className="form-group">
-                                <label className="form-label">I am a...</label>
+                                <label className="form-label">Role</label>
                                 <select className="form-select" value={form.role} onChange={e => setForm({...form, role: e.target.value})}>
                                     <option value="brand">Brand</option>
                                     <option value="influencer">Influencer</option>
                                 </select>
                             </div>
                         )}
-                        <button className="btn btn-primary" style={{width: '100%', padding: '1rem', marginTop: '0.5rem'}} onClick={tab === 'login' ? handleLogin : handleRegister} disabled={loading}>
-                            {loading ? '⏳ Please wait...' : tab === 'login' ? '🔑 Login' : '🚀 Create Account'}
+                        <button className="btn btn-primary" style={{width: '100%'}} onClick={tab === 'login' ? handleLogin : handleRegister} disabled={loading}>
+                            {loading ? 'Loading...' : tab === 'login' ? 'Login' : 'Register'}
                         </button>
                     </div>
                 </div>
             );
         }
 
-        // Navbar (same)
-        function Navbar({ currentPage, setCurrentPage, user, setShowAuth, handleLogout }) {
-            return (
-                <nav className="navbar">
-                    <div className="logo" onClick={() => setCurrentPage('home')}>🌉 Promobridge</div>
-                    <ul className="nav-menu">
-                        <li><span className={`nav-link ${currentPage === 'home' ? 'active' : ''}`} onClick={() => setCurrentPage('home')}>Home</span></li>
-                        <li><span className={`nav-link ${currentPage === 'search' ? 'active' : ''}`} onClick={() => setCurrentPage('search')}>Find Influencers</span></li>
-                        <li><span className={`nav-link ${currentPage === 'campaign' ? 'active' : ''}`} onClick={() => setCurrentPage('campaign')}>Create Campaign</span></li>
-                        <li><span className={`nav-link ${currentPage === 'pricing' ? 'active' : ''}`} onClick={() => setCurrentPage('pricing')}>Pricing</span></li>
-                        <li><span className={`nav-link ${currentPage === 'dashboard' ? 'active' : ''}`} onClick={() => setCurrentPage('dashboard')}>Dashboard</span></li>
-                    </ul>
-                    {user ? (
-                        <div style={{display:'flex', alignItems:'center', gap:'1rem'}}>
-                            <span style={{fontWeight:600, color:'var(--primary)'}}>👤 {user.email.split('@')[0]}</span>
-                            <button className="btn btn-secondary" style={{padding:'0.5rem 1rem'}} onClick={handleLogout}>Logout</button>
-                        </div>
-                    ) : (
-                        <button className="btn btn-primary" onClick={() => setShowAuth(true)}>Login / Register</button>
-                    )}
-                </nav>
-            );
-        }
-
-        // HomePage (same, with StatsSection)
         function HomePage({ setCurrentPage }) {
             return (
                 <div>
                     <section className="hero">
                         <h1>Smart Influencer<br/>Brand Matching</h1>
-                        <p>AI-powered platform connecting brands with perfect influencers. Transparent pricing, fraud detection, and data-driven recommendations.</p>
+                        <p>AI-powered platform connecting brands with perfect influencers.</p>
                         <div className="hero-buttons">
-                            <button className="btn btn-primary" onClick={() => setCurrentPage('search')}>🔍 Find Influencers</button>
-                            <button className="btn btn-secondary" onClick={() => setCurrentPage('campaign')}>🚀 Create Campaign</button>
-                            <button className="btn btn-secondary" onClick={() => setCurrentPage('pricing')}>💰 Calculate Pricing</button>
+                            <button className="btn btn-primary" onClick={() => setCurrentPage('search')}>Find Influencers</button>
+                            <button className="btn btn-secondary" onClick={() => setCurrentPage('campaign')}>Create Campaign</button>
+                            <button className="btn btn-secondary" onClick={() => setCurrentPage('pricing')}>Calculate Pricing</button>
                         </div>
                     </section>
                     <div className="container">
@@ -193,47 +245,28 @@
             );
         }
 
-        // StatsSection (updated with real API)
         function StatsSection() {
             const [stats, setStats] = useState(null);
             useEffect(() => {
                 axios.get(`${API_BASE_URL}/stats`)
-                    .then(res => setStats(res.data))
-                    .catch(err => {
-                        console.error('Stats error:', err);
-                        setStats({ total_influencers: 20, total_brands: 0, total_campaigns: 0, success_rate: 95 });
-                    });
+                    .then(r => setStats(r.data))
+                    .catch(() => setStats({total_influencers:20, total_brands:0, total_campaigns:0, success_rate:95}));
             }, []);
-
-            if (!stats) return <div className="loading"><div className="spinner"></div>Loading stats...</div>;
-
+            if (!stats) return <div className="loading">Loading stats...</div>;
             return (
                 <div className="stats-grid">
-                    <div className="stat-card">
-                        <div className="stat-card-value">{stats.total_influencers}+</div>
-                        <div className="stat-card-label">Active Influencers</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-card-value">{stats.total_brands}+</div>
-                        <div className="stat-card-label">Brands</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-card-value">{stats.total_campaigns}+</div>
-                        <div className="stat-card-label">Campaigns</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-card-value">{stats.success_rate}%</div>
-                        <div className="stat-card-label">Success Rate</div>
-                    </div>
+                    <div className="stat-card"><div className="stat-card-value">{stats.total_influencers}+</div><div className="stat-card-label">Influencers</div></div>
+                    <div className="stat-card"><div className="stat-card-value">{stats.total_brands}+</div><div className="stat-card-label">Brands</div></div>
+                    <div className="stat-card"><div className="stat-card-value">{stats.total_campaigns}+</div><div className="stat-card-label">Campaigns</div></div>
+                    <div className="stat-card"><div className="stat-card-value">{stats.success_rate}%</div><div className="stat-card-label">Success Rate</div></div>
                 </div>
             );
         }
 
-        // SearchPage (influencers with real API + mock fallback)
         function SearchPage() {
             const [influencers, setInfluencers] = useState([]);
             const [loading, setLoading] = useState(true);
-            const [filters, setFilters] = useState({ platform: '', niche: '', minFollowers: '' });
+            const [filters, setFilters] = useState({platform:'', niche:'', minFollowers:''});
 
             useEffect(() => { fetchInfluencers(); }, []);
 
@@ -244,46 +277,33 @@
                 if (filters.niche) params.niche = filters.niche;
                 if (filters.minFollowers) params.min_followers = filters.minFollowers;
 
-                axios.get(`${API_BASE_URL}/influencers`, { params })
-                    .then(res => {
-                        setInfluencers(res.data || []);
-                        setLoading(false);
-                    })
-                    .catch(err => {
-                        console.error('Influencers fetch error:', err);
-                        setInfluencers(getMockInfluencers());
-                        setLoading(false);
-                    });
+                axios.get(`${API_BASE_URL}/influencers`, {params})
+                    .then(r => { setInfluencers(r.data || []); setLoading(false); })
+                    .catch(() => { setInfluencers(getMockInfluencers()); setLoading(false); });
             };
 
             return (
                 <div className="container">
                     <div className="search-container">
-                        <h2 style={{marginBottom: '1.5rem', fontFamily: 'Outfit', fontSize: '2rem'}}>🔍 Find Perfect Influencers</h2>
+                        <h2>Find Perfect Influencers</h2>
                         <div className="search-bar">
-                            <select className="form-select" value={filters.platform} onChange={e => setFilters({...filters, platform: e.target.value})}>
+                            <select value={filters.platform} onChange={e => setFilters({...filters, platform: e.target.value})}>
                                 <option value="">All Platforms</option>
                                 <option value="instagram">Instagram</option>
                                 <option value="youtube">YouTube</option>
                                 <option value="tiktok">TikTok</option>
                             </select>
-                            <select className="form-select" value={filters.niche} onChange={e => setFilters({...filters, niche: e.target.value})}>
+                            <select value={filters.niche} onChange={e => setFilters({...filters, niche: e.target.value})}>
                                 <option value="">All Niches</option>
                                 <option value="Fitness">Fitness</option>
                                 <option value="Fashion">Fashion</option>
                                 <option value="Tech">Tech</option>
-                                <option value="Food">Food</option>
-                                <option value="Travel">Travel</option>
                             </select>
-                            <input type="number" className="form-input" placeholder="Min Followers" value={filters.minFollowers} onChange={e => setFilters({...filters, minFollowers: e.target.value})} />
+                            <input type="number" placeholder="Min Followers" value={filters.minFollowers} onChange={e => setFilters({...filters, minFollowers: e.target.value})} />
                             <button className="btn btn-primary" onClick={fetchInfluencers}>Search</button>
                         </div>
                     </div>
-                    {loading ? (
-                        <div className="loading"><div className="spinner"></div>Loading influencers...</div>
-                    ) : influencers.length === 0 ? (
-                        <div className="card" style={{textAlign:'center', padding:'3rem'}}>No influencers found. Try different filters.</div>
-                    ) : (
+                    {loading ? <div className="loading">Loading...</div> : (
                         <div className="card-grid">
                             {influencers.map((inf, i) => <InfluencerCard key={i} influencer={inf} />)}
                         </div>
@@ -292,92 +312,109 @@
             );
         }
 
-        // InfluencerCard & other components same rakh diye (tera original code hi use kar raha hai, sirf fetch fix kiya)
+        function InfluencerCard({ influencer }) {
+            const [showModal, setShowModal] = useState(false);
+            const matchScore = Math.floor(Math.random() * 15 + 82);
+            const price = Math.floor((influencer.followers_count / 1000) * 830 * (1 + (influencer.engagement_rate || 0) / 100));
 
-        // PricingPage (POST body mein convert kiya)
+            return (
+                <>
+                    <div className="influencer-card" onClick={() => setShowModal(true)}>
+                        <div className="influencer-avatar">{influencer.full_name?.[0] || '?'}</div>
+                        <div className="influencer-name">{influencer.full_name || 'Unknown'}</div>
+                        <div className="influencer-handle">@{influencer.handle || 'n/a'}</div>
+                        <div>
+                            <span className="badge badge-primary">{influencer.platform || 'Unknown'}</span>
+                            <span className="badge badge-primary">{influencer.niche || 'General'}</span>
+                        </div>
+                        <div className="stats-row">
+                            <div className="stat"><span className="stat-value">{formatNumber(influencer.followers_count || 0)}</span><span className="stat-label">Followers</span></div>
+                            <div className="stat"><span className="stat-value">{influencer.engagement_rate || 0}%</span><span className="stat-label">Engagement</span></div>
+                            <div className="stat"><span className="stat-value">{formatINR(price)}</span><span className="stat-label">Est. Price</span></div>
+                        </div>
+                    </div>
+                    {showModal && (
+                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                            <div className="modal" onClick={e => e.stopPropagation()}>
+                                <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
+                                <h2>{influencer.full_name}</h2>
+                                <p>@{influencer.handle}</p>
+                                <div className="stats-row">
+                                    <div className="stat"><span className="stat-value">{formatIndian(influencer.followers_count || 0)}</span><span className="stat-label">Followers</span></div>
+                                    <div className="stat"><span className="stat-value">{influencer.engagement_rate || 0}%</span><span className="stat-label">Engagement</span></div>
+                                    <div className="stat"><span className="stat-value">{formatINR(price)}</span><span className="stat-label">Price</span></div>
+                                </div>
+                                <button className="btn btn-primary" onClick={() => setShowModal(false)}>Close</button>
+                            </div>
+                        </div>
+                    )}
+                </>
+            );
+        }
+
+        function formatINR(amount) {
+            if (!amount || amount === 0) return '₹0';
+            if (amount >= 10000000) return `₹${(amount / 10000000).toFixed(1)} Cr`;
+            if (amount >= 100000) return `₹${(amount / 100000).toFixed(1)} L`;
+            if (amount >= 1000) return `₹${(amount / 1000).toFixed(1)}K`;
+            return `₹${amount.toLocaleString('en-IN')}`;
+        }
+
+        function formatNumber(num) {
+            if (!num || num === 0) return '0';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function formatIndian(num) {
+            if (!num || num === 0) return '0';
+            if (num >= 10000000) return (num / 10000000).toFixed(1) + ' Cr';
+            if (num >= 100000) return (num / 100000).toFixed(1) + ' L';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toLocaleString('en-IN');
+        }
+
+        function getMockInfluencers() {
+            return [
+                { full_name: "Virat Kohli", handle: "virat.kohli", platform: "Instagram", niche: "Fitness", followers_count: 270000000, engagement_rate: 4.2 },
+                { full_name: "Bhuvan Bam", handle: "bhuvan.bam22", platform: "YouTube", niche: "Entertainment", followers_count: 26000000, engagement_rate: 5.8 }
+            ];
+        }
+
         function PricingPage() {
             const [inputs, setInputs] = useState({ followers: 50000, engagement_rate: 3.5, platform: 'instagram', content_type: 'post' });
             const [result, setResult] = useState(null);
-            const [loading, setLoading] = useState(false);
 
-            const calculatePricing = async () => {
-                setLoading(true);
-                try {
-                    const res = await axios.post(`${API_BASE_URL}/calculate-pricing`, null, {
-                        params: inputs  // backend query params expect karta hai
+            const calculatePricing = () => {
+                axios.post(`${API_BASE_URL}/calculate-pricing`, null, { params: inputs })
+                    .then(r => setResult(r.data))
+                    .catch(() => {
+                        const price = (inputs.followers / 1000) * 830 * (1 + inputs.engagement_rate / 100);
+                        setResult({ suggested_price: Math.round(price), min_price: Math.round(price*0.8), max_price: Math.round(price*1.2) });
                     });
-                    const d = res.data;
-                    setResult({
-                        suggested_price: Math.round((d.suggested_price || 0) * 83),
-                        min_price: Math.round((d.min_price || 0) * 83),
-                        max_price: Math.round((d.max_price || 0) * 83),
-                    });
-                } catch (err) {
-                    console.error('Pricing error:', err);
-                    const price = (inputs.followers / 1000) * 830 * (1 + inputs.engagement_rate / 100);
-                    setResult({
-                        suggested_price: Math.round(price),
-                        min_price: Math.round(price * 0.8),
-                        max_price: Math.round(price * 1.2),
-                    });
-                    alert('Using fallback pricing (API issue).');
-                }
-                setLoading(false);
             };
 
             return (
                 <div className="container">
                     <div className="card">
-                        <h2 style={{marginBottom: '2rem', fontFamily: 'Outfit', fontSize: '2.5rem'}}>💰 Pricing Calculator</h2>
-                        {/* tera form same */}
-                        <div className="form-group"> {/* followers input */} </div>
-                        {/* ... baaki inputs same ... */}
-                        <button className="btn btn-primary" style={{width: '100%', padding: '1.2rem'}} onClick={calculatePricing} disabled={loading}>
-                            {loading ? 'Calculating...' : 'Calculate Suggested Pricing'}
-                        </button>
-                        {result && (
-                            <div className="pricing-result">
-                                <h3 style={{fontSize: '1.5rem', marginBottom: '1rem'}}>💰 Suggested Pricing (Indian Rupees)</h3>
-                                <div className="price-display">{formatINR(result.suggested_price)}</div>
-                                <p>Range: {formatINR(result.min_price)} — {formatINR(result.max_price)}</p>
-                                <p>Based on {formatIndian(Number(inputs.followers))} followers & {inputs.engagement_rate}% engagement</p>
-                            </div>
-                        )}
+                        <h2>Pricing Calculator</h2>
+                        <input type="number" value={inputs.followers} onChange={e => setInputs({...inputs, followers: +e.target.value})} placeholder="Followers" />
+                        <input type="number" step="0.1" value={inputs.engagement_rate} onChange={e => setInputs({...inputs, engagement_rate: +e.target.value})} placeholder="Engagement %" />
+                        <select value={inputs.platform} onChange={e => setInputs({...inputs, platform: e.target.value})}>
+                            <option value="instagram">Instagram</option>
+                            <option value="youtube">YouTube</option>
+                        </select>
+                        <button onClick={calculatePricing}>Calculate</button>
+                        {result && <div>Suggested: {formatINR(result.suggested_price)}</div>}
                     </div>
                 </div>
             );
         }
 
-        // DashboardPage (campaigns abhi mock/alert)
-        function DashboardPage() {
-            const [campaigns, setCampaigns] = useState([]);
-            const [loading, setLoading] = useState(true);
-            useEffect(() => {
-                axios.get(`${API_BASE_URL}/campaigns`, { params: { limit: 10 } })
-                    .then(r => { setCampaigns(r.data || []); setLoading(false); })
-                    .catch(() => { setLoading(false); });
-            }, []);
-            // tera original code same rakh diya
-            return (
-                <div className="container">
-                    <StatsSection />
-                    <h2 style={{fontFamily:'Outfit', fontSize:'2rem', marginBottom:'1.5rem'}}>📢 Active Campaigns</h2>
-                    {loading ? (
-                        <div className="loading"><div className="spinner"></div>Loading campaigns...</div>
-                    ) : campaigns.length === 0 ? (
-                        <div className="card" style={{textAlign:'center', padding:'3rem'}}>
-                            <p style={{fontSize:'1.2rem', color:'var(--gray)'}}>No campaigns yet. Create one!</p>
-                        </div>
-                    ) : (
-                        <div className="card-grid">
-                            {/* tera map code same */}
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        // Format functions same (formatINR, formatNumber, getMockInfluencers etc.)
+        // Placeholder for other pages
+        function CampaignPage() { return <div className="container"><h2>Create Campaign (Coming Soon)</h2></div>; }
+        function DashboardPage() { return <div className="container"><h2>Dashboard (Coming Soon)</h2></div>; }
 
         ReactDOM.render(<App />, document.getElementById('root'));
     </script>
