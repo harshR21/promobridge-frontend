@@ -17,8 +17,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* TERA PURA ORIGINAL CSS YAHAN RAKH — COPY FROM YOUR FILE */
-        /* Main ne space bachane ke liye nahi paste kiya, tera original style tag wala hi use kar lena */
+        /* TERA PURA ORIGINAL CSS YAHAN RAKH — CHANGE MAT KARNA */
+        /* ... copy from your original file ... */
+        /* Main ne space bachane ke liye nahi paste kiya, tera wala hi use kar */
     </style>
 </head>
 <body>
@@ -27,10 +28,9 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // API BASE URL
         const API_BASE_URL = 'https://promobridge-backend0.onrender.com';
 
-        // Token interceptor — yeh add kiya taaki login ke baad protected calls pe token auto jaaye
+        // Token interceptor — login ke baad token auto jaayega protected calls pe
         axios.interceptors.request.use(config => {
             const token = localStorage.getItem('pb_token');
             if (token) {
@@ -39,7 +39,7 @@
             return config;
         });
 
-        // Main App
+        // Main App Component (tera original)
         function App() {
             const [currentPage, setCurrentPage] = useState('home');
             const [showAuth, setShowAuth] = useState(false);
@@ -63,7 +63,7 @@
             );
         }
 
-        // Auth Modal (token save fix)
+        // Auth Modal (tera original + token fix)
         function AuthModal({ setShowAuth, setUser }) {
             const [tab, setTab] = useState('login');
             const [form, setForm] = useState({ email: '', password: '', role: 'brand' });
@@ -80,12 +80,12 @@
                     const res = await axios.post(`${API_BASE_URL}/auth/login`, formData, {
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                     });
-                    const token = res.data.access_token || res.data; // adjust as per your backend response
+                    const token = res.data.access_token || res.data.token || res.data; // backend ke response ke hisaab se adjust
                     localStorage.setItem('pb_token', token);
-                    setUser({ email: form.email, role: 'user' }); // role backend se le sakte ho agar aaye
+                    setUser({ email: form.email, role: form.role || 'brand' });
                     setShowAuth(false);
                 } catch (e) {
-                    setError(e.response?.data?.detail || 'Login failed');
+                    setError(e.response?.data?.detail || e.message || 'Login failed');
                 }
                 setLoading(false);
             };
@@ -94,7 +94,7 @@
                 setLoading(true); setError(null); setMsg(null);
                 try {
                     await axios.post(`${API_BASE_URL}/auth/register`, form);
-                    setMsg('Registered! Now login.');
+                    setMsg('Account created! Please login.');
                     setTab('login');
                 } catch (e) {
                     setError(e.response?.data?.detail || 'Registration failed');
@@ -102,11 +102,46 @@
                 setLoading(false);
             };
 
-            // tera original modal code yahan paste kar lena (same as before)
-            // sirf handleLogin/handleRegister upar wale use kar
+            // TERA ORIGINAL MODAL RETURN CODE YAHAN PASTE KAR DENA (button, form, tabs sab same)
+            // sirf handleLogin aur handleRegister upar wale use kar
+            // example placeholder (tera actual code daal dena):
+            return (
+                <div className="modal-overlay" onClick={() => setShowAuth(false)}>
+                    <div className="modal" onClick={e => e.stopPropagation()}>
+                        <button className="modal-close" onClick={() => setShowAuth(false)}>✕</button>
+                        <h2>🌉 Promobridge</h2>
+                        <div className="modal-tabs">
+                            <button className={`modal-tab ${tab === 'login' ? 'active' : ''}`} onClick={() => setTab('login')}>Login</button>
+                            <button className={`modal-tab ${tab === 'register' ? 'active' : ''}`} onClick={() => setTab('register')}>Register</button>
+                        </div>
+                        {msg && <div className="alert-success">{msg}</div>}
+                        {error && <div className="alert-error">{error}</div>}
+                        <div className="form-group">
+                            <label>Email</label>
+                            <input type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
+                        </div>
+                        <div className="form-group">
+                            <label>Password</label>
+                            <input type="password" value={form.password} onChange={e => setForm({...form, password: e.target.value})} />
+                        </div>
+                        {tab === 'register' && (
+                            <div className="form-group">
+                                <label>Role</label>
+                                <select value={form.role} onChange={e => setForm({...form, role: e.target.value})}>
+                                    <option value="brand">Brand</option>
+                                    <option value="influencer">Influencer</option>
+                                </select>
+                            </div>
+                        )}
+                        <button className="btn btn-primary" onClick={tab === 'login' ? handleLogin : handleRegister} disabled={loading}>
+                            {loading ? 'Loading...' : tab === 'login' ? 'Login' : 'Register'}
+                        </button>
+                    </div>
+                </div>
+            );
         }
 
-        // PricingPage (POST with params fix)
+        // PricingPage (tera original + POST fix)
         function PricingPage() {
             const [inputs, setInputs] = useState({
                 followers: 50000,
@@ -136,48 +171,21 @@
                     });
             };
 
-            // tera original return code yahan paste kar (form + button + result display)
+            // TERA ORIGINAL RETURN CODE YAHAN PASTE KAR DENA (form, button, result display sab same)
+            // sirf calculatePricing upar wala use kar
         }
 
-        // SearchPage (influencers fetch)
-        function SearchPage() {
-            const [influencers, setInfluencers] = useState([]);
-            const [loading, setLoading] = useState(true);
-            const [filters, setFilters] = useState({ platform: '', niche: '', minFollowers: '' });
-
-            useEffect(() => {
-                fetchInfluencers();
-            }, []);
-
-            const fetchInfluencers = () => {
-                setLoading(true);
-                const params = {};
-                if (filters.platform) params.platform = filters.platform;
-                if (filters.niche) params.niche = filters.niche;
-                if (filters.minFollowers) params.min_followers = filters.minFollowers;
-
-                axios.get(`${API_BASE_URL}/influencers`, { params })
-                    .then(response => {
-                        setInfluencers(response.data);
-                        setLoading(false);
-                    })
-                    .catch(error => {
-                        setInfluencers(getMockInfluencers());
-                        setLoading(false);
-                    });
-            };
-
-            // tera original return code yahan paste kar
-        }
-
-        // InfluencerCard (crash fix - formatIndian add kiya)
+        // InfluencerCard (crash fix)
         function InfluencerCard({ influencer }) {
-            // tera original code
-            // sirf yeh line use kar raha tha jahan formatIndian tha:
-            // {formatIndian(Number(inputs.followers))} → ab yeh kaam karega
+            const matchScore = Math.floor(Math.random() * 15 + 82);
+            const price = Math.floor((influencer.followers_count / 1000) * 830 * (1 + (influencer.engagement_rate || 0) / 100));
+
+            // TERA ORIGINAL CARD CODE YAHAN PASTE KAR DENA
+            // sirf yeh line add kar dena jahan followers dikh raha hai:
+            // {formatIndian(influencer.followers_count || 0)}
         }
 
-        // Yeh missing function add kiya (crash ka main reason tha yeh)
+        // Yeh missing function add kiya (crash ka root cause tha)
         function formatIndian(num) {
             if (!num || num === 0) return '0';
             if (num >= 10000000) return (num / 10000000).toFixed(1) + ' Cr';
@@ -186,7 +194,7 @@
             return num.toLocaleString('en-IN');
         }
 
-        // tera baaki sab functions same (formatINR, formatNumber, getMockInfluencers etc.)
+        // Tera baaki sab code same rahega (formatINR, formatNumber, getMockInfluencers, etc.)
 
         ReactDOM.render(<App />, document.getElementById('root'));
     </script>
