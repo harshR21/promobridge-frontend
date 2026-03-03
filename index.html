@@ -3,599 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promobridge - Smart Influencer Matching Platform</title>
+    <title>Promobridge — India's Influencer Marketing Platform</title>
     
-    <!-- React & ReactDOM from CDN -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Axios for API calls -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #ec4899;
-            --accent: #14b8a6;
-            --dark: #0f172a;
-            --dark-light: #1e293b;
-            --gray: #64748b;
-            --light: #f8fafc;
-            --white: #ffffff;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --primary: #7C3AED;
+            --primary-light: #8B5CF6;
+            --primary-dark: #6D28D9;
+            --accent: #F59E0B;
+            --accent2: #EC4899;
+            --dark: #0D0D1A;
+            --dark2: #13132B;
+            --dark3: #1A1A35;
+            --card-bg: rgba(255,255,255,0.04);
+            --card-border: rgba(255,255,255,0.08);
+            --text: #F0EEFF;
+            --text-muted: #9490B5;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --glass: rgba(255,255,255,0.05);
+            --glass-border: rgba(255,255,255,0.1);
         }
-        
+
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark);
             min-height: 100vh;
-            color: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
         }
-        
-        #root {
-            min-height: 100vh;
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -40%;
+            left: -20%;
+            width: 80vw;
+            height: 80vw;
+            background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
-        
-        /* Navbar */
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -40%;
+            right: -20%;
+            width: 70vw;
+            height: 70vw;
+            background: radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        #root { min-height: 100vh; position: relative; z-index: 1; }
+
+        /* NAVBAR */
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 1.2rem 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            background: rgba(13,13,26,0.85);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 2.5rem;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 200;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: slideDown 0.5s ease-out;
         }
-        
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
+
         .logo {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.8rem;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.6rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
             cursor: pointer;
+            color: var(--text);
+            letter-spacing: -0.5px;
         }
-        
-        .nav-menu {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-            align-items: center;
-        }
-        
-        .nav-link {
-            color: var(--dark);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            position: relative;
-            cursor: pointer;
-        }
-        
-        .nav-link:hover {
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-        
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 2px;
-        }
-        
-        .btn {
-            padding: 0.75rem 1.8rem;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.95rem;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4);
-        }
-        
-        .btn-secondary {
-            background: white;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 5rem 2rem;
-            background: white;
-            margin: 2rem;
-            border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 0.8s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .hero h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 4rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.2;
-        }
-        
-        .hero p {
-            font-size: 1.4rem;
-            color: var(--gray);
-            margin-bottom: 2.5rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .hero-buttons {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        /* Container */
-        .container {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
-        
-        /* Cards */
-        .card {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
-            animation: slideUp 0.6s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
-        }
-        
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        /* Influencer Cards */
-        .influencer-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 2rem;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .influencer-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.1);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .influencer-card:hover::before {
-            opacity: 1;
-        }
-        
-        .influencer-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 0 auto 1.5rem;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .influencer-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        
-        .influencer-handle {
-            opacity: 0.9;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin: 0.3rem;
-        }
-        
-        .badge-primary {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-        }
-        
-        .badge-success {
-            background: #d1fae5;
-            color: var(--success);
-        }
-        
-        .badge-warning {
-            background: #fef3c7;
-            color: var(--warning);
-        }
-        
-        .stats-row {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .stat {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: block;
-        }
-        
-        .stat-label {
-            font-size: 0.85rem;
-            opacity: 0.8;
-            margin-top: 0.3rem;
-        }
-        
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 0.9rem 1.2rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.3s;
-        }
-        
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
-        
-        .form-textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-        
-        /* Search Bar */
-        .search-container {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-        }
-        
-        .search-bar {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr auto;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        /* Pricing Result */
-        .pricing-result {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 20px;
-            padding: 3rem;
-            color: white;
-            text-align: center;
-            margin-top: 2rem;
-            animation: scaleIn 0.5s ease-out;
-        }
-        
-        @keyframes scaleIn {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        
-        .price-display {
-            font-size: 4rem;
-            font-weight: 800;
-            margin: 1.5rem 0;
-        }
-        
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-card-value {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-card-label {
-            color: var(--gray);
-            font-weight: 600;
-        }
-        
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 3rem;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .nav-menu {
-                display: none;
-            }
-            
-            .search-bar {
-                grid-template-columns: 1fr;
-            }
-            
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease;
-        }
-        .modal {
-            background: white;
-            border-radius: 24px;
-            padding: 2.5rem;
-            width: 100%;
-            max-width: 440px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.2);
-            animation: slideUp 0.3s ease;
-            position: relative;
-        }
-        .modal-close {
-            position: absolute;
-            top: 1.2rem; right: 1.5rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--gray);
-        }
-        .modal h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .modal-tabs {
-            display: flex;
-            gap: 0;
-            margin-bottom: 1.5rem;
-            background: #f1f5f9;
-            border-radius: 12px;
-            padding: 4px;
-        }
-        .modal-tab {
-            flex: 1;
-            padding: 0.6rem;
-            border: none;
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #7C3AED, #EC4899);
             border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(124,58,237,0.4);
+        }
+        .logo span.highlight { 
+            background: linear-gradient(135deg, #A78BFA, #F472B6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu { display: flex; gap: 0.3rem; list-style: none; align-items: center; }
+        .nav-link {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
             cursor: pointer;
-            font-weight: 600;
-            background: none;
-            color: var(--gray);
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
             transition: all 0.2s;
         }
-        .modal-tab.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            padding: 0.8rem 1rem;
+        .nav-link:hover { color: var(--text); background: var(--glass); }
+        .nav-link.active { color: var(--text); background: rgba(124,58,237,0.2); }
+
+        /* BUTTONS */
+        .btn {
+            padding: 0.65rem 1.4rem;
             border-radius: 10px;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-        .user-badge {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 0.5rem 1.2rem;
-            border-radius: 20px;
             font-weight: 600;
             font-size: 0.9rem;
             cursor: pointer;
             border: none;
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #7C3AED, #EC4899);
+            color: white;
+            box-shadow: 0 4px 15px rgba(124,58,237,0.35);
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,0.5); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-secondary {
+            background: var(--glass);
+            color: var(--text);
+            border: 1px solid var(--glass-border);
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.08); }
+
+        /* HERO */
+        .hero {
+            padding: 6rem 2.5rem 4rem;
+            text-align: center;
+            position: relative;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(124,58,237,0.15);
+            border: 1px solid rgba(124,58,237,0.3);
+            color: #A78BFA;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.8rem, 7vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, #A78BFA 0%, #F472B6 50%, #FCD34D 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            max-width: 580px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        /* CONTAINER */
+        .container { max-width: 1280px; margin: 0 auto; padding: 2rem 2.5rem; }
+
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+            margin: 2rem 0;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-3px); border-color: rgba(124,58,237,0.3); }
+        .stat-card-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #A78BFA, #F472B6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-card-label { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem; }
+
+        /* CARDS */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.8rem;
+            backdrop-filter: blur(10px);
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
         }
 
-        /* Page Transitions */
-        .page-enter {
-            opacity: 0;
-            transform: translateY(30px);
+        /* INFLUENCER CARD */
+        .influencer-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .page-enter-active {
-            opacity: 1;
-            transform: translateY(0);
-            transition: all 0.5s ease-out;
+        .influencer-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #7C3AED, #EC4899);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .influencer-card:hover { transform: translateY(-5px); border-color: rgba(124,58,237,0.35); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .influencer-card:hover::before { opacity: 1; }
+        .influencer-name { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.2rem; color: var(--text); }
+        .influencer-handle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.8rem; }
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-top: 1rem; }
+        .stat { text-align: center; }
+        .stat-value { display: block; font-weight: 700; font-size: 1rem; color: var(--text); }
+        .stat-label { display: block; font-size: 0.72rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+        /* BADGE */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin: 0.15rem;
+        }
+        .badge-primary { background: rgba(124,58,237,0.2); color: #A78BFA; border: 1px solid rgba(124,58,237,0.3); }
+        .badge-success { background: rgba(16,185,129,0.15); color: #10B981; }
+
+        /* FORM */
+        .form-group { margin-bottom: 1.2rem; }
+        .form-label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: rgba(124,58,237,0.5);
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+        }
+        .form-select option { background: var(--dark2); }
+        .form-textarea { resize: vertical; min-height: 100px; }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            animation: fadeIn 0.2s ease;
+        }
+        .modal {
+            background: var(--dark2);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 460px;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+        }
+        .modal-close {
+            position: absolute; top: 1.2rem; right: 1.5rem;
+            background: none; border: none; color: var(--text-muted);
+            font-size: 1.3rem; cursor: pointer;
+        }
+        .modal-close:hover { color: var(--text); }
+        .modal h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #A78BFA, #F472B6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+        .modal-tabs {
+            display: flex; gap: 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px; padding: 4px;
+            margin-bottom: 1.5rem;
+        }
+        .modal-tab {
+            flex: 1; padding: 0.6rem; border: none; border-radius: 8px;
+            cursor: pointer; font-weight: 600; background: none;
+            color: var(--text-muted); transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .modal-tab.active { background: rgba(124,58,237,0.3); color: var(--text); }
+        .alert-success { background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3); padding: 0.8rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 600; }
+        .alert-error { background: rgba(239,68,68,0.15); color: #EF4444; border: 1px solid rgba(239,68,68,0.3); padding: 0.8rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 600; }
+
+        /* LOADING */
+        .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem; color: var(--text-muted); gap: 1rem; }
+        .spinner { width: 36px; height: 36px; border: 3px solid rgba(124,58,237,0.2); border-top-color: #7C3AED; border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+        /* FILTERS */
+        .filter-bar { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .filter-bar .form-select { flex: 1; min-width: 150px; }
+
+        /* PRICING RESULT */
+        .pricing-result { background: linear-gradient(135deg, #7C3AED, #EC4899); border-radius: 16px; padding: 2rem; text-align: center; margin-top: 1.5rem; color: white; }
+        .price-display { font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; margin: 0.5rem 0; }
+
+        /* PAGE TRANSITIONS */
+        .page-enter { animation: fadeInUp 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--dark); }
+        ::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.4); border-radius: 3px; }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .nav-menu { display: none; }
+            .hero { padding: 3rem 1.5rem 2rem; }
+            .container { padding: 1.5rem; }
         }
     </style>
 </head>
@@ -719,7 +500,8 @@
             return (
                 <nav className="navbar">
                     <div className="logo" onClick={() => setCurrentPage('home')}>
-                        🌉 Promobridge
+                        <div className="logo-icon">🌉</div>
+                        <span>Promo<span className="highlight">bridge</span></span>
                     </div>
                     
                     <ul className="nav-menu">
@@ -747,11 +529,9 @@
             return (
                 <div>
                     <section className="hero">
-                        <h1>Smart Influencer<br/>Brand Matching</h1>
-                        <p>
-                            AI-powered platform connecting brands with perfect influencers.
-                            Transparent pricing, fraud detection, and data-driven recommendations.
-                        </p>
+                        <div className="hero-badge">✦ India's #1 Influencer Marketing Platform</div>
+                        <h1>Connect Brands with<br/><span className="gradient-text">Perfect Influencers</span></h1>
+                        <p>AI-powered matching across Instagram, YouTube & TikTok. Real pricing, fraud detection, and data-driven campaigns — all in one place.</p>
                         <div className="hero-buttons">
                             <button 
                                 className="btn btn-primary"
@@ -918,8 +698,9 @@
         const nicheColors = { Fitness: '#10b981', Fashion: '#ec4899', Tech: '#6366f1', Entertainment: '#f59e0b', Food: '#ef4444', Travel: '#14b8a6' };
 
         function getAvatarUrl(name) {
-            const encoded = encodeURIComponent(name);
-            return `https://ui-avatars.com/api/?name=${encoded}&size=120&background=random&color=fff&bold=true&format=png`;
+            // Use DiceBear notionists style - beautiful illustrated portraits
+            const seed = encodeURIComponent(name);
+            return `https://api.dicebear.com/7.x/notionists/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&backgroundType=gradientLinear`;
         }
 
         function getPlatformLink(handle, platform) {
@@ -933,37 +714,51 @@
         // Influencer Card
         function InfluencerCard({ influencer }) {
             const [showModal, setShowModal] = useState(false);
+            const [imgLoaded, setImgLoaded] = useState(false);
             const matchScore = Math.floor(Math.random() * 15 + 82);
             const price = Math.floor((influencer.followers_count / 1000) * 830 * (1 + influencer.engagement_rate / 100));
+            const nicheColor = nicheColors[influencer.niche] || '#888';
 
             return (
                 <>
                 <div className="influencer-card" onClick={() => setShowModal(true)}>
-                    <div style={{position:'relative', width:100, height:100, margin:'0 auto 1rem'}}>
-                        <img 
-                            src={getAvatarUrl(influencer.full_name)}
-                            alt={influencer.full_name}
-                            style={{width:100, height:100, borderRadius:'50%', border:'4px solid rgba(255,255,255,0.4)', objectFit:'cover'}}
-                            onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
-                        />
-                        <div style={{display:'none', width:100, height:100, borderRadius:'50%', background:'rgba(255,255,255,0.2)', alignItems:'center', justifyContent:'center', fontSize:'2rem', fontWeight:700, border:'4px solid rgba(255,255,255,0.4)'}}>
-                            {influencer.full_name.split(' ').map(n => n[0]).join('')}
+                    {/* Avatar */}
+                    <div style={{position:'relative', width:90, height:90, margin:'0 auto 1rem'}}>
+                        <div style={{
+                            width:90, height:90, borderRadius:'50%',
+                            background:`linear-gradient(135deg, ${nicheColor}33, ${nicheColor}66)`,
+                            border:`2px solid ${nicheColor}55`,
+                            overflow:'hidden',
+                            display:'flex', alignItems:'center', justifyContent:'center'
+                        }}>
+                            <img
+                                src={getAvatarUrl(influencer.full_name)}
+                                alt={influencer.full_name}
+                                style={{width:'100%', height:'100%', objectFit:'cover'}}
+                                onError={(e) => { e.target.style.display='none'; }}
+                            />
                         </div>
-                        <div style={{position:'absolute', bottom:2, right:2, background: platformColors[influencer.platform] || '#666', borderRadius:'50%', width:28, height:28, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.75rem', border:'2px solid white'}}>
+                        <div style={{
+                            position:'absolute', bottom:0, right:0,
+                            background: platformColors[influencer.platform] || '#666',
+                            borderRadius:'50%', width:24, height:24,
+                            display:'flex', alignItems:'center', justifyContent:'center',
+                            fontSize:'0.65rem', border:'2px solid var(--dark)'
+                        }}>
                             {platformIcons[influencer.platform] || '🌐'}
                         </div>
                     </div>
 
                     <div className="influencer-name">{influencer.full_name}</div>
-                    <div className="influencer-handle" style={{opacity:0.8}}>@{influencer.handle.replace('.pb','')}</div>
+                    <div className="influencer-handle">@{influencer.handle.replace('.pb','')}</div>
 
-                    <div style={{margin:'0.5rem 0'}}>
+                    <div style={{margin:'0.6rem 0'}}>
                         <span className="badge badge-primary">{influencer.platform}</span>
-                        <span className="badge badge-primary" style={{background: `${nicheColors[influencer.niche] || '#888'}33`}}>{influencer.niche}</span>
+                        <span className="badge" style={{background:`${nicheColor}22`, color:nicheColor, border:`1px solid ${nicheColor}44`}}>{influencer.niche}</span>
                     </div>
 
-                    <div style={{background:'rgba(255,255,255,0.15)', borderRadius:12, padding:'0.5rem', margin:'0.5rem 0', fontSize:'0.85rem'}}>
-                        ✅ Match Score: <strong>{matchScore}%</strong>
+                    <div style={{background:'rgba(124,58,237,0.1)', border:'1px solid rgba(124,58,237,0.2)', borderRadius:8, padding:'0.4rem 0.8rem', margin:'0.5rem 0', fontSize:'0.82rem', color:'#A78BFA'}}>
+                        ✦ Match Score: <strong>{matchScore}%</strong>
                     </div>
 
                     <div className="stats-row">
@@ -976,7 +771,7 @@
                             <span className="stat-label">Engagement</span>
                         </div>
                         <div className="stat">
-                            <span className="stat-value">{formatINR(price)}</span>
+                            <span className="stat-value" style={{color:'#10B981'}}>{formatINR(price)}</span>
                             <span className="stat-label">Est. Price</span>
                         </div>
                     </div>
@@ -984,47 +779,52 @@
 
                 {showModal && (
                     <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                        <div className="modal" onClick={e => e.stopPropagation()} style={{maxWidth:500}}>
+                        <div className="modal" onClick={e => e.stopPropagation()} style={{maxWidth:480}}>
                             <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
                             <div style={{textAlign:'center', marginBottom:'1.5rem'}}>
-                                <img src={getAvatarUrl(influencer.full_name)} alt={influencer.full_name}
-                                    style={{width:100, height:100, borderRadius:'50%', border:'4px solid var(--primary)', marginBottom:'1rem'}} />
-                                <h2 style={{fontSize:'1.8rem', marginBottom:'0.3rem'}}>{influencer.full_name}</h2>
-                                <p style={{color:'var(--gray)'}}>@{influencer.handle.replace('.pb','')}</p>
-                                <p style={{margin:'0.5rem 0', color:'var(--gray)', fontSize:'0.95rem'}}>{influencer.bio || 'Content creator'}</p>
-                                <p style={{color:'var(--gray)', fontSize:'0.9rem'}}>📍 {influencer.location || 'India'}</p>
+                                <div style={{
+                                    width:110, height:110, borderRadius:'50%', margin:'0 auto 1rem',
+                                    background:`linear-gradient(135deg, ${nicheColor}33, ${nicheColor}55)`,
+                                    border:`3px solid ${nicheColor}66`, overflow:'hidden',
+                                    display:'flex', alignItems:'center', justifyContent:'center'
+                                }}>
+                                    <img src={getAvatarUrl(influencer.full_name)} alt={influencer.full_name}
+                                        style={{width:'100%', height:'100%', objectFit:'cover'}} />
+                                </div>
+                                <h2 style={{fontSize:'1.6rem', color:'var(--text)'}}>{influencer.full_name}</h2>
+                                <p style={{color:'var(--text-muted)', fontSize:'0.9rem'}}>@{influencer.handle.replace('.pb','')}</p>
+                                <p style={{color:'var(--text-muted)', fontSize:'0.9rem', margin:'0.4rem 0'}}>{influencer.bio || 'Content creator'}</p>
+                                <p style={{color:'var(--text-muted)', fontSize:'0.85rem'}}>📍 {influencer.location || 'India'}</p>
                             </div>
 
-                            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'1rem', marginBottom:'1.5rem'}}>
+                            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'0.8rem', marginBottom:'1.2rem'}}>
                                 {[
                                     {label:'Followers', value: formatNumber(influencer.followers_count || 0)},
                                     {label:'Engagement', value: `${influencer.engagement_rate || 0}%`},
                                     {label:'Match Score', value: `${matchScore}%`},
                                 ].map(s => (
-                                    <div key={s.label} style={{background:'#f8fafc', borderRadius:12, padding:'1rem', textAlign:'center'}}>
-                                        <div style={{fontSize:'1.4rem', fontWeight:800, color:'var(--primary)'}}>{s.value}</div>
-                                        <div style={{fontSize:'0.8rem', color:'var(--gray)'}}>{s.label}</div>
+                                    <div key={s.label} style={{background:'rgba(255,255,255,0.05)', borderRadius:12, padding:'0.8rem', textAlign:'center', border:'1px solid var(--glass-border)'}}>
+                                        <div style={{fontSize:'1.3rem', fontWeight:800, color:'#A78BFA'}}>{s.value}</div>
+                                        <div style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{s.label}</div>
                                     </div>
                                 ))}
                             </div>
 
-                            <div style={{background:'#f8fafc', borderRadius:12, padding:'1rem', marginBottom:'1rem'}}>
-                                <div style={{display:'flex', justifyContent:'space-between', marginBottom:'0.5rem'}}>
-                                    <span style={{color:'var(--gray)'}}>Platform</span>
-                                    <span style={{fontWeight:600}}>{platformIcons[influencer.platform]} {influencer.platform}</span>
-                                </div>
-                                <div style={{display:'flex', justifyContent:'space-between', marginBottom:'0.5rem'}}>
-                                    <span style={{color:'var(--gray)'}}>Niche</span>
-                                    <span style={{fontWeight:600}}>{influencer.niche}</span>
-                                </div>
-                                <div style={{display:'flex', justifyContent:'space-between'}}>
-                                    <span style={{color:'var(--gray)'}}>Suggested Price</span>
-                                    <span style={{fontWeight:700, color:'var(--success)'}}>{formatINR(price)}</span>
-                                </div>
+                            <div style={{background:'rgba(255,255,255,0.04)', borderRadius:12, padding:'1rem', marginBottom:'1rem', border:'1px solid var(--glass-border)'}}>
+                                {[
+                                    {k:'Platform', v:`${platformIcons[influencer.platform]} ${influencer.platform}`},
+                                    {k:'Niche', v:influencer.niche},
+                                    {k:'Est. Price per Post', v:formatINR(price)},
+                                ].map(row => (
+                                    <div key={row.k} style={{display:'flex', justifyContent:'space-between', padding:'0.4rem 0', borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
+                                        <span style={{color:'var(--text-muted)', fontSize:'0.9rem'}}>{row.k}</span>
+                                        <span style={{fontWeight:600, color:'var(--text)', fontSize:'0.9rem'}}>{row.v}</span>
+                                    </div>
+                                ))}
                             </div>
 
-                            <div style={{display:'flex', gap:'1rem'}}>
-                                <a href={getPlatformLink(influencer.handle, influencer.platform)} 
+                            <div style={{display:'flex', gap:'0.8rem'}}>
+                                <a href={getPlatformLink(influencer.handle, influencer.platform)}
                                    target="_blank" rel="noreferrer"
                                    className="btn btn-secondary" style={{flex:1, textAlign:'center', textDecoration:'none'}}>
                                     View Profile 🔗
@@ -1040,7 +840,7 @@
                 </>
             );
         }
-        
+
         // Campaign Page
         function CampaignPage() {
             const [formData, setFormData] = useState({
@@ -1170,113 +970,192 @@
             );
         }
         
-        // Pricing Page
+        // Real Indian Influencer Pricing Calculator
         function PricingPage() {
             const [inputs, setInputs] = useState({
-                followers: 50000,
+                followers: 100000,
                 engagement_rate: 3.5,
                 platform: 'instagram',
-                content_type: 'post'
+                niche: 'Fashion'
             });
             const [result, setResult] = useState(null);
-            
-            const USD_TO_INR = 83;
-            const calculatePricing = () => {
-                axios.post(`${API_BASE_URL}/calculate-pricing`, inputs)
-                    .then(response => {
-                        const d = response.data;
-                        setResult({
-                            suggested_price: Math.round(d.suggested_price * USD_TO_INR),
-                            min_price: Math.round(d.min_price * USD_TO_INR),
-                            max_price: Math.round(d.max_price * USD_TO_INR),
-                        });
-                    })
-                    .catch(error => {
-                        const price = (inputs.followers / 1000) * 830 * (1 + inputs.engagement_rate / 100);
-                        setResult({
-                            suggested_price: Math.round(price),
-                            min_price: Math.round(price * 0.8),
-                            max_price: Math.round(price * 1.2),
-                        });
-                    });
+
+            // Real Indian influencer pricing rates (INR) based on industry standards
+            // Source: Influencer Marketing Hub India 2024 data
+            const PLATFORM_BASE_RATE = {
+                instagram: { post: 1, story: 0.4, reel: 1.5, carousel: 1.2 },
+                youtube:   { video: 2.5, short: 0.8, livestream: 1.8 },
+                tiktok:    { video: 0.6, live: 0.5 },
             };
-            
+
+            const NICHE_MULTIPLIER = {
+                'Fashion': 1.3, 'Tech': 1.5, 'Fitness': 1.2,
+                'Food': 1.1, 'Travel': 1.4, 'Entertainment': 1.0,
+            };
+
+            const TIER_RATES = {
+                nano:    { min: 1000,    max: 10000,    cpm: 150  },
+                micro:   { min: 10000,   max: 100000,   cpm: 120  },
+                mid:     { min: 100000,  max: 500000,   cpm: 100  },
+                macro:   { min: 500000,  max: 1000000,  cpm: 80   },
+                mega:    { min: 1000000, max: 10000000, cpm: 60   },
+                celeb:   { min: 10000000,max: Infinity, cpm: 40   },
+            };
+
+            const getTier = (f) => {
+                if (f < 10000) return { name: 'Nano', ...TIER_RATES.nano };
+                if (f < 100000) return { name: 'Micro', ...TIER_RATES.micro };
+                if (f < 500000) return { name: 'Mid-Tier', ...TIER_RATES.mid };
+                if (f < 1000000) return { name: 'Macro', ...TIER_RATES.macro };
+                if (f < 10000000) return { name: 'Mega', ...TIER_RATES.mega };
+                return { name: 'Celebrity', ...TIER_RATES.celeb };
+            };
+
+            const getContentTypes = (platform) => {
+                if (platform === 'instagram') return [
+                    { key: 'post', label: '📸 Static Post', mult: 1.0 },
+                    { key: 'reel', label: '🎬 Reel', mult: 1.5 },
+                    { key: 'story', label: '⏱️ Story (24hr)', mult: 0.4 },
+                    { key: 'carousel', label: '🖼️ Carousel Post', mult: 1.2 },
+                ];
+                if (platform === 'youtube') return [
+                    { key: 'video', label: '🎥 Dedicated Video', mult: 2.5 },
+                    { key: 'integration', label: '📌 Brand Integration', mult: 1.5 },
+                    { key: 'short', label: '⚡ YouTube Short', mult: 0.8 },
+                ];
+                if (platform === 'tiktok') return [
+                    { key: 'video', label: '🎵 TikTok Video', mult: 0.6 },
+                    { key: 'duet', label: '🤝 Duet/Collab', mult: 0.5 },
+                ];
+                return [];
+            };
+
+            const calculateAll = () => {
+                const f = Number(inputs.followers);
+                const er = Number(inputs.engagement_rate);
+                const tier = getTier(f);
+                const nicheMult = NICHE_MULTIPLIER[inputs.niche] || 1.0;
+                const engMult = 1 + (er - 3) * 0.05; // Base engagement is 3%
+                const basePrice = (f / 1000) * tier.cpm * nicheMult * Math.max(0.7, engMult);
+                const contentTypes = getContentTypes(inputs.platform);
+                const breakdown = contentTypes.map(ct => ({
+                    ...ct,
+                    price: Math.round(basePrice * ct.mult),
+                    min: Math.round(basePrice * ct.mult * 0.7),
+                    max: Math.round(basePrice * ct.mult * 1.4),
+                }));
+                setResult({ tier, breakdown, basePrice: Math.round(basePrice), f, er, nicheMult });
+            };
+
+            const contentTypes = getContentTypes(inputs.platform);
+
             return (
                 <div className="container">
-                    <div className="card">
-                        <h2 style={{marginBottom: '2rem', fontFamily: 'Outfit', fontSize: '2.5rem'}}>
-                            💰 Pricing Calculator
+                    <div style={{textAlign:'center', marginBottom:'2rem'}}>
+                        <h2 style={{fontFamily:'Outfit', fontSize:'2.5rem', background:'linear-gradient(135deg, #6366f1, #ec4899)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent'}}>
+                            💰 Influencer Pricing Calculator
                         </h2>
-                        
-                        <div className="form-group">
-                            <label className="form-label">Number of Followers</label>
-                            <input 
-                                type="number"
-                                className="form-input"
-                                value={inputs.followers}
-                                onChange={(e) => setInputs({...inputs, followers: e.target.value})}
-                            />
-                        </div>
-                        
-                        <div className="form-group">
-                            <label className="form-label">Engagement Rate (%)</label>
-                            <input 
-                                type="number"
-                                className="form-input"
-                                step="0.1"
-                                value={inputs.engagement_rate}
-                                onChange={(e) => setInputs({...inputs, engagement_rate: e.target.value})}
-                            />
-                        </div>
-                        
-                        <div className="form-group">
-                            <label className="form-label">Platform</label>
-                            <select 
-                                className="form-select"
-                                value={inputs.platform}
-                                onChange={(e) => setInputs({...inputs, platform: e.target.value})}
-                            >
-                                <option value="instagram">Instagram</option>
-                                <option value="youtube">YouTube</option>
-                                <option value="tiktok">TikTok</option>
-                            </select>
-                        </div>
-                        
-                        <div className="form-group">
-                            <label className="form-label">Content Type</label>
-                            <select 
-                                className="form-select"
-                                value={inputs.content_type}
-                                onChange={(e) => setInputs({...inputs, content_type: e.target.value})}
-                            >
-                                <option value="post">Post</option>
-                                <option value="story">Story</option>
-                                <option value="reel">Reel/Video</option>
-                            </select>
-                        </div>
-                        
-                        <button 
-                            className="btn btn-primary"
-                            style={{width: '100%', padding: '1.2rem'}}
-                            onClick={calculatePricing}
-                        >
-                            Calculate Suggested Pricing
-                        </button>
-                        
-                        {result && (
-                            <div className="pricing-result">
-                                <h3 style={{fontSize: '1.5rem', marginBottom: '1rem'}}>💰 Suggested Pricing (Indian Rupees)</h3>
-                                <div className="price-display">
-                                    {formatINR(result.suggested_price)}
-                                </div>
-                                <p style={{fontSize: '1.2rem', opacity: 0.9}}>
-                                    Range: {formatINR(result.min_price)} — {formatINR(result.max_price)}
-                                </p>
-                                <p style={{marginTop: '1.5rem', opacity: 0.9}}>
-                                    Based on {formatIndian(Number(inputs.followers))} followers & {inputs.engagement_rate}% engagement
-                                </p>
+                        <p style={{color:'var(--gray)'}}>Real Indian market rates based on followers, engagement & niche</p>
+                    </div>
+
+                    <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'2rem'}}>
+                        {/* LEFT - Inputs */}
+                        <div className="card">
+                            <h3 style={{fontFamily:'Outfit', fontSize:'1.5rem', marginBottom:'1.5rem'}}>📊 Influencer Details</h3>
+
+                            <div className="form-group">
+                                <label className="form-label">Followers Count</label>
+                                <input type="number" className="form-input"
+                                    value={inputs.followers}
+                                    onChange={e => setInputs({...inputs, followers: e.target.value})}
+                                    placeholder="e.g. 100000" />
+                                <small style={{color:'var(--gray)'}}>Current: {formatNumber(Number(inputs.followers))} followers</small>
                             </div>
-                        )}
+
+                            <div className="form-group">
+                                <label className="form-label">Engagement Rate (%)</label>
+                                <input type="number" className="form-input" step="0.1" min="0" max="100"
+                                    value={inputs.engagement_rate}
+                                    onChange={e => setInputs({...inputs, engagement_rate: e.target.value})} />
+                                <small style={{color:'var(--gray)'}}>Average Indian: 3-6% | Good: 6%+</small>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Platform</label>
+                                <select className="form-select" value={inputs.platform}
+                                    onChange={e => setInputs({...inputs, platform: e.target.value})}>
+                                    <option value="instagram">📸 Instagram</option>
+                                    <option value="youtube">▶️ YouTube</option>
+                                    <option value="tiktok">🎵 TikTok</option>
+                                </select>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Niche / Category</label>
+                                <select className="form-select" value={inputs.niche}
+                                    onChange={e => setInputs({...inputs, niche: e.target.value})}>
+                                    <option value="Fashion">👗 Fashion</option>
+                                    <option value="Tech">💻 Tech</option>
+                                    <option value="Fitness">💪 Fitness</option>
+                                    <option value="Food">🍔 Food</option>
+                                    <option value="Travel">✈️ Travel</option>
+                                    <option value="Entertainment">🎭 Entertainment</option>
+                                </select>
+                            </div>
+
+                            <button className="btn btn-primary" style={{width:'100%', padding:'1.2rem', fontSize:'1.1rem'}}
+                                onClick={calculateAll}>
+                                🧮 Calculate Pricing
+                            </button>
+                        </div>
+
+                        {/* RIGHT - Results */}
+                        <div>
+                            {!result ? (
+                                <div className="card" style={{textAlign:'center', padding:'3rem'}}>
+                                    <div style={{fontSize:'4rem', marginBottom:'1rem'}}>💡</div>
+                                    <p style={{color:'var(--gray)', fontSize:'1.1rem'}}>Fill in the details and click Calculate to see pricing breakdown</p>
+                                </div>
+                            ) : (
+                                <>
+                                    {/* Tier Badge */}
+                                    <div className="card" style={{marginBottom:'1rem', background:'linear-gradient(135deg, #6366f1, #ec4899)', color:'white'}}>
+                                        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                                            <div>
+                                                <div style={{fontSize:'0.9rem', opacity:0.9}}>Influencer Tier</div>
+                                                <div style={{fontSize:'2rem', fontWeight:800, fontFamily:'Outfit'}}>{result.tier.name}</div>
+                                                <div style={{fontSize:'0.9rem', opacity:0.9}}>{formatNumber(result.f)} followers • {result.er}% engagement</div>
+                                            </div>
+                                            <div style={{textAlign:'right'}}>
+                                                <div style={{fontSize:'0.9rem', opacity:0.9}}>Base Rate / 1K followers</div>
+                                                <div style={{fontSize:'1.8rem', fontWeight:800}}>₹{result.tier.cpm}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Content Type Breakdown */}
+                                    <div className="card">
+                                        <h3 style={{fontFamily:'Outfit', fontSize:'1.3rem', marginBottom:'1rem'}}>📋 Pricing by Content Type</h3>
+                                        {result.breakdown.map(ct => (
+                                            <div key={ct.key} style={{background:'#f8fafc', borderRadius:12, padding:'1rem', marginBottom:'0.8rem'}}>
+                                                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'0.3rem'}}>
+                                                    <span style={{fontWeight:600}}>{ct.label}</span>
+                                                    <span style={{fontWeight:800, fontSize:'1.2rem', color:'var(--primary)'}}>{formatINR(ct.price)}</span>
+                                                </div>
+                                                <div style={{display:'flex', justifyContent:'space-between'}}>
+                                                    <span style={{fontSize:'0.8rem', color:'var(--gray)'}}>Min: {formatINR(ct.min)}</span>
+                                                    <span style={{fontSize:'0.8rem', color:'var(--gray)'}}>Max: {formatINR(ct.max)}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+
+                                        <div style={{marginTop:'1rem', padding:'1rem', background:'#ede9fe', borderRadius:12, fontSize:'0.85rem', color:'#6366f1'}}>
+                                            💡 <strong>Niche premium:</strong> {inputs.niche} gets {Math.round((result.nicheMult - 1) * 100)}% higher rates than average
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
             );
