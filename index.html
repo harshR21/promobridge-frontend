@@ -1,1269 +1,762 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promobridge — India's Influencer Marketing Platform</title>
-    
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-    
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promobridge — India's Influencer Marketing Platform</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07070F;
+  --bg2:#0E0E1C;
+  --bg3:#141428;
+  --card:#12121F;
+  --card2:#1A1A2E;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(124,58,237,0.25);
+  --p1:#7C3AED;
+  --p2:#A855F7;
+  --p3:#C084FC;
+  --acc:#F472B6;
+  --acc2:#FB923C;
+  --gold:#FBBF24;
+  --green:#10B981;
+  --text:#F8F8FF;
+  --text2:#A0A0C0;
+  --text3:#6B6B8A;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-        :root {
-            --primary: #7C3AED;
-            --primary-light: #8B5CF6;
-            --primary-dark: #6D28D9;
-            --accent: #F59E0B;
-            --accent2: #EC4899;
-            --dark: #0D0D1A;
-            --dark2: #13132B;
-            --dark3: #1A1A35;
-            --card-bg: rgba(255,255,255,0.04);
-            --card-border: rgba(255,255,255,0.08);
-            --text: #F0EEFF;
-            --text-muted: #9490B5;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --glass: rgba(255,255,255,0.05);
-            --glass-border: rgba(255,255,255,0.1);
-        }
+/* AMBIENT GLOW */
+body::before{content:'';position:fixed;top:-30vh;left:-20vw;width:70vw;height:70vh;background:radial-gradient(ellipse,rgba(124,58,237,0.12) 0%,transparent 65%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;bottom:-30vh;right:-20vw;width:60vw;height:60vh;background:radial-gradient(ellipse,rgba(244,114,182,0.08) 0%,transparent 65%);pointer-events:none;z-index:0}
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--dark);
-            min-height: 100vh;
-            color: var(--text);
-            overflow-x: hidden;
-        }
+#root{position:relative;z-index:1}
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: -40%;
-            left: -20%;
-            width: 80vw;
-            height: 80vw;
-            background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: -40%;
-            right: -20%;
-            width: 70vw;
-            height: 70vw;
-            background: radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
+/* NAV */
+nav{position:sticky;top:0;z-index:500;background:rgba(7,7,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2.5rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:0.5rem;color:var(--text)}
+.logo-box{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--p1),var(--acc));display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 4px 14px rgba(124,58,237,0.45)}
+.logo em{font-style:normal;background:linear-gradient(135deg,var(--p3),var(--acc));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:0.2rem;list-style:none}
+.nav-links li span{padding:0.45rem 0.9rem;border-radius:8px;cursor:pointer;font-size:0.875rem;font-weight:500;color:var(--text2);transition:all 0.18s;display:block}
+.nav-links li span:hover{color:var(--text);background:rgba(255,255,255,0.06)}
+.nav-links li span.active{color:var(--text);background:rgba(124,58,237,0.18);border:1px solid var(--border2)}
+.nav-right{display:flex;align-items:center;gap:0.8rem}
+.user-chip{display:flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem 0.4rem 0.6rem;border-radius:20px;background:rgba(124,58,237,0.15);border:1px solid var(--border2);font-size:0.85rem;font-weight:600;color:var(--p3);cursor:pointer}
 
-        #root { min-height: 100vh; position: relative; z-index: 1; }
+/* BUTTONS */
+.btn{padding:0.6rem 1.3rem;border-radius:10px;font-weight:600;font-size:0.875rem;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all 0.18s;display:inline-flex;align-items:center;gap:0.4rem}
+.btn-primary{background:linear-gradient(135deg,var(--p1),#9333EA);color:#fff;box-shadow:0 4px 14px rgba(124,58,237,0.35)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(124,58,237,0.5)}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border);padding:0.6rem 1.3rem}
+.btn-outline:hover{border-color:var(--border2);background:rgba(124,58,237,0.08)}
+.btn-ghost{background:rgba(255,255,255,0.05);color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,255,255,0.09);color:var(--text)}
+.btn-sm{padding:0.4rem 0.9rem;font-size:0.8rem;border-radius:8px}
 
-        /* NAVBAR */
-        .navbar {
-            background: rgba(13,13,26,0.85);
-            backdrop-filter: blur(24px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 1rem 2.5rem;
-            position: sticky;
-            top: 0;
-            z-index: 200;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+/* HERO */
+.hero{padding:5.5rem 2.5rem 3.5rem;text-align:center;position:relative}
+.hero-pill{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.28);color:var(--p3);padding:0.35rem 1rem;border-radius:20px;font-size:0.8rem;font-weight:600;margin-bottom:1.8rem;letter-spacing:0.3px}
+.hero-pill span{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(3rem,7vw,5.8rem);font-weight:800;line-height:1.02;letter-spacing:-2.5px;margin-bottom:1.3rem}
+.hero h1 .g{background:linear-gradient(135deg,#A78BFA 0%,#F472B6 45%,#FB923C 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{color:var(--text2);font-size:1.1rem;max-width:560px;margin:0 auto 2.5rem;line-height:1.75}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
 
-        .logo {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.6rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            cursor: pointer;
-            color: var(--text);
-            letter-spacing: -0.5px;
-        }
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, #7C3AED, #EC4899);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 15px rgba(124,58,237,0.4);
-        }
-        .logo span.highlight { 
-            background: linear-gradient(135deg, #A78BFA, #F472B6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+/* LAYOUT */
+.container{max-width:1280px;margin:0 auto;padding:2rem 2.5rem}
+.section-title{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:700;margin-bottom:0.4rem}
+.section-sub{color:var(--text2);font-size:0.9rem;margin-bottom:1.8rem}
 
-        .nav-menu { display: flex; gap: 0.3rem; list-style: none; align-items: center; }
-        .nav-link {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 0.5rem 0.9rem;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-        .nav-link:hover { color: var(--text); background: var(--glass); }
-        .nav-link.active { color: var(--text); background: rgba(124,58,237,0.2); }
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2rem 0}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.4rem 1.2rem;text-align:center;transition:all 0.2s;position:relative;overflow:hidden}
+.stat-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--p1),var(--acc));opacity:0;transition:opacity 0.2s}
+.stat-box:hover{border-color:var(--border2);transform:translateY(-2px)}
+.stat-box:hover::before{opacity:1}
+.stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--p3),var(--acc));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-lbl{color:var(--text2);font-size:0.8rem;margin-top:0.25rem;font-weight:500}
 
-        /* BUTTONS */
-        .btn {
-            padding: 0.65rem 1.4rem;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-            font-family: 'DM Sans', sans-serif;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #7C3AED, #EC4899);
-            color: white;
-            box-shadow: 0 4px 15px rgba(124,58,237,0.35);
-        }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,0.5); }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .btn-secondary {
-            background: var(--glass);
-            color: var(--text);
-            border: 1px solid var(--glass-border);
-        }
-        .btn-secondary:hover { background: rgba(255,255,255,0.08); }
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.6rem}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:1rem}
 
-        /* HERO */
-        .hero {
-            padding: 6rem 2.5rem 4rem;
-            text-align: center;
-            position: relative;
-        }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(124,58,237,0.15);
-            border: 1px solid rgba(124,58,237,0.3);
-            color: #A78BFA;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
-        }
-        .hero h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(2.8rem, 7vw, 5.5rem);
-            font-weight: 800;
-            line-height: 1.05;
-            letter-spacing: -2px;
-            margin-bottom: 1.5rem;
-        }
-        .hero h1 .gradient-text {
-            background: linear-gradient(135deg, #A78BFA 0%, #F472B6 50%, #FCD34D 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .hero p {
-            color: var(--text-muted);
-            font-size: 1.15rem;
-            max-width: 580px;
-            margin: 0 auto 2.5rem;
-            line-height: 1.7;
-        }
-        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+/* INFLUENCER CARD */
+.inf-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.4rem;cursor:pointer;transition:all 0.22s;text-align:center;position:relative;overflow:hidden}
+.inf-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,0.04),rgba(244,114,182,0.04));opacity:0;transition:opacity 0.22s}
+.inf-card:hover{border-color:rgba(124,58,237,0.4);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
+.inf-card:hover::after{opacity:1}
+.inf-card .top-bar{position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,var(--p1),var(--acc));opacity:0;transition:opacity 0.22s}
+.inf-card:hover .top-bar{opacity:1}
+.avatar-wrap{position:relative;width:82px;height:82px;margin:0 auto 0.9rem}
+.avatar-img{width:82px;height:82px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.1)}
+.avatar-platform{position:absolute;bottom:0;right:0;width:22px;height:22px;border-radius:50%;border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:0.6rem}
+.inf-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:0.15rem}
+.inf-handle{color:var(--text3);font-size:0.8rem;margin-bottom:0.7rem}
+.tags{display:flex;gap:0.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.7rem}
+.tag{padding:0.2rem 0.6rem;border-radius:6px;font-size:0.72rem;font-weight:600}
+.match-bar{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:0.35rem 0.7rem;font-size:0.78rem;color:#10B981;margin-bottom:0.8rem;font-weight:600}
+.inf-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.4rem;border-top:1px solid var(--border);padding-top:0.8rem;margin-top:0.3rem}
+.inf-stat-val{display:block;font-weight:700;font-size:0.9rem;color:var(--text)}
+.inf-stat-lbl{display:block;font-size:0.68rem;color:var(--text3);margin-top:0.1rem}
 
-        /* CONTAINER */
-        .container { max-width: 1280px; margin: 0 auto; padding: 2rem 2.5rem; }
+/* BADGE */
+.badge{display:inline-block;padding:0.22rem 0.65rem;border-radius:6px;font-size:0.72rem;font-weight:600}
+.badge-p{background:rgba(124,58,237,0.18);color:var(--p3);border:1px solid rgba(124,58,237,0.25)}
+.badge-g{background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.2)}
+.badge-o{background:rgba(251,146,60,0.15);color:#FB923C;border:1px solid rgba(251,146,60,0.2)}
 
-        /* STATS */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.2rem;
-            margin: 2rem 0;
-        }
-        .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            transition: transform 0.2s, border-color 0.2s;
-        }
-        .stat-card:hover { transform: translateY(-3px); border-color: rgba(124,58,237,0.3); }
-        .stat-card-value {
-            font-family: 'Syne', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #A78BFA, #F472B6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .stat-card-label { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem; }
+/* FORM */
+.form-group{margin-bottom:1.1rem}
+.form-label{display:block;font-size:0.75rem;font-weight:600;color:var(--text2);margin-bottom:0.45rem;text-transform:uppercase;letter-spacing:0.6px}
+.form-input,.form-select,.form-textarea{width:100%;padding:0.8rem 1rem;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Inter',sans-serif;font-size:0.9rem;transition:all 0.18s}
+.form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:rgba(124,58,237,0.5);box-shadow:0 0 0 3px rgba(124,58,237,0.1)}
+.form-select option{background:var(--bg2);color:var(--text)}
+.form-textarea{resize:vertical;min-height:90px}
+small.hint{color:var(--text3);font-size:0.78rem;margin-top:0.3rem;display:block}
 
-        /* CARDS */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 1.8rem;
-            backdrop-filter: blur(10px);
-        }
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.2rem;
-        }
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;animation:fadeIn 0.2s}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:22px;padding:2.2rem;width:100%;max-width:450px;position:relative;animation:slideUp 0.28s ease;box-shadow:0 40px 80px rgba(0,0,0,0.6)}
+.modal-close{position:absolute;top:1.1rem;right:1.3rem;background:rgba(255,255,255,0.06);border:none;color:var(--text2);font-size:1rem;cursor:pointer;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{color:var(--text);background:rgba(255,255,255,0.1)}
+.tabs{display:flex;gap:0;background:rgba(255,255,255,0.04);border-radius:10px;padding:3px;margin-bottom:1.4rem}
+.tab{flex:1;padding:0.55rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;background:none;color:var(--text2);transition:all 0.18s;font-family:'Inter',sans-serif}
+.tab.active{background:rgba(124,58,237,0.28);color:var(--text)}
+.alert-ok{background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);color:#10B981;padding:0.7rem 1rem;border-radius:9px;margin-bottom:1rem;font-size:0.875rem;font-weight:600}
+.alert-err{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#F87171;padding:0.7rem 1rem;border-radius:9px;margin-bottom:1rem;font-size:0.875rem;font-weight:600}
 
-        /* INFLUENCER CARD */
-        .influencer-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: all 0.25s;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-        }
-        .influencer-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #7C3AED, #EC4899);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        .influencer-card:hover { transform: translateY(-5px); border-color: rgba(124,58,237,0.35); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .influencer-card:hover::before { opacity: 1; }
-        .influencer-name { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.2rem; color: var(--text); }
-        .influencer-handle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.8rem; }
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-top: 1rem; }
-        .stat { text-align: center; }
-        .stat-value { display: block; font-weight: 700; font-size: 1rem; color: var(--text); }
-        .stat-label { display: block; font-size: 0.72rem; color: var(--text-muted); margin-top: 0.15rem; }
+/* LOADER */
+.loader{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem;color:var(--text3);gap:1rem}
+.spin{width:34px;height:34px;border:3px solid rgba(124,58,237,0.2);border-top-color:var(--p1);border-radius:50%;animation:spin 0.75s linear infinite}
 
-        /* BADGE */
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.7rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin: 0.15rem;
-        }
-        .badge-primary { background: rgba(124,58,237,0.2); color: #A78BFA; border: 1px solid rgba(124,58,237,0.3); }
-        .badge-success { background: rgba(16,185,129,0.15); color: #10B981; }
+/* FILTER BAR */
+.filters{display:flex;gap:0.8rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+.filters .form-select{flex:1;min-width:140px;max-width:200px}
 
-        /* FORM */
-        .form-group { margin-bottom: 1.2rem; }
-        .form-label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 0.85rem 1rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.95rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: rgba(124,58,237,0.5);
-            box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
-        }
-        .form-select option { background: var(--dark2); }
-        .form-textarea { resize: vertical; min-height: 100px; }
+/* PRICING CARD */
+.price-result-card{background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(244,114,182,0.15));border:1px solid rgba(124,58,237,0.3);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
+.price-big{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--text)}
+.content-row{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;margin-bottom:0.6rem;display:flex;justify-content:space-between;align-items:center;transition:border-color 0.18s}
+.content-row:hover{border-color:var(--border2)}
+.content-row-label{font-weight:600;font-size:0.9rem;color:var(--text)}
+.content-row-sub{font-size:0.75rem;color:var(--text3);margin-top:0.15rem}
+.content-row-price{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:var(--p3)}
+.content-row-range{font-size:0.72rem;color:var(--text3);text-align:right;margin-top:0.1rem}
 
-        /* MODAL */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            display: flex; align-items: center; justify-content: center;
-            animation: fadeIn 0.2s ease;
-        }
-        .modal {
-            background: var(--dark2);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            width: 100%;
-            max-width: 460px;
-            position: relative;
-            animation: slideUp 0.3s ease;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-        }
-        .modal-close {
-            position: absolute; top: 1.2rem; right: 1.5rem;
-            background: none; border: none; color: var(--text-muted);
-            font-size: 1.3rem; cursor: pointer;
-        }
-        .modal-close:hover { color: var(--text); }
-        .modal h2 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.8rem;
-            background: linear-gradient(135deg, #A78BFA, #F472B6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.3rem;
-        }
-        .modal-tabs {
-            display: flex; gap: 0;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px; padding: 4px;
-            margin-bottom: 1.5rem;
-        }
-        .modal-tab {
-            flex: 1; padding: 0.6rem; border: none; border-radius: 8px;
-            cursor: pointer; font-weight: 600; background: none;
-            color: var(--text-muted); transition: all 0.2s;
-            font-family: 'DM Sans', sans-serif;
-        }
-        .modal-tab.active { background: rgba(124,58,237,0.3); color: var(--text); }
-        .alert-success { background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3); padding: 0.8rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 600; }
-        .alert-error { background: rgba(239,68,68,0.15); color: #EF4444; border: 1px solid rgba(239,68,68,0.3); padding: 0.8rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 600; }
+/* CAMPAIGN CARD */
+.camp-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.4rem;transition:all 0.2s}
+.camp-card:hover{border-color:var(--border2);transform:translateY(-2px)}
 
-        /* LOADING */
-        .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem; color: var(--text-muted); gap: 1rem; }
-        .spinner { width: 36px; height: 36px; border: 3px solid rgba(124,58,237,0.2); border-top-color: #7C3AED; border-radius: 50%; animation: spin 0.8s linear infinite; }
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(124,58,237,0.35);border-radius:3px}
 
-        /* FILTERS */
-        .filter-bar { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
-        .filter-bar .form-select { flex: 1; min-width: 150px; }
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeInUp 0.4s ease both}
 
-        /* PRICING RESULT */
-        .pricing-result { background: linear-gradient(135deg, #7C3AED, #EC4899); border-radius: 16px; padding: 2rem; text-align: center; margin-top: 1.5rem; color: white; }
-        .price-display { font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; margin: 0.5rem 0; }
-
-        /* PAGE TRANSITIONS */
-        .page-enter { animation: fadeInUp 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--dark); }
-        ::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.4); border-radius: 3px; }
-
-        @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .nav-menu { display: none; }
-            .hero { padding: 3rem 1.5rem 2rem; }
-            .container { padding: 1.5rem; }
-        }
-    </style>
+@media(max-width:768px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  nav{padding:0 1rem}
+  .nav-links{display:none}
+  .hero{padding:3rem 1.5rem 2rem}
+  .container{padding:1.5rem}
+}
+</style>
 </head>
 <body>
-    <div id="root"></div>
-    
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        
-        // API Configuration
-        const API_BASE_URL = 'https://promobridge-backend0.onrender.com';
-        
-        // Main App Component
-        function App() {
-            const [currentPage, setCurrentPage] = useState('home');
-            const [showAuth, setShowAuth] = useState(false);
-            const [user, setUser] = useState(null);
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useCallback} = React;
+const API = 'https://promobridge-backend0.onrender.com';
 
-            const handleLogout = () => {
-                setUser(null);
-                localStorage.removeItem('pb_token');
-            };
+// ── UTILS ──────────────────────────────────────────
+function fNum(n){if(!n||n===0)return'0';if(n>=10000000)return(n/10000000).toFixed(1)+'Cr';if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=100000)return(n/100000).toFixed(0)+'L';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toString()}
+function fINR(a){if(!a||a===0)return'₹0';if(a>=10000000)return`₹${(a/10000000).toFixed(1)} Cr`;if(a>=100000)return`₹${(a/100000).toFixed(1)} L`;if(a>=1000)return`₹${(a/1000).toFixed(0)}K`;return`₹${a}`}
 
-            return (
+const PLAT_COLOR={instagram:'#E1306C',youtube:'#FF0000',tiktok:'#000',twitter:'#1DA1F2'};
+const PLAT_ICON={instagram:'📸',youtube:'▶️',tiktok:'🎵',twitter:'🐦'};
+const NICHE_COLOR={Fitness:'#10B981',Fashion:'#F472B6',Tech:'#818CF8',Entertainment:'#FBBF24',Food:'#FB923C',Travel:'#22D3EE'};
+
+function avatar(name){return`https://api.dicebear.com/7.x/notionists/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&backgroundType=gradientLinear`}
+function profileLink(handle,platform){const h=handle.replace('.pb','').replace(/\s/g,'');if(platform==='instagram')return`https://instagram.com/${h}`;if(platform==='youtube')return`https://youtube.com/@${h}`;if(platform==='tiktok')return`https://tiktok.com/@${h}`;return'#'}
+
+// ── APP ────────────────────────────────────────────
+function App(){
+  const[page,setPage]=useState('home');
+  const[showAuth,setShowAuth]=useState(false);
+  const[user,setUser]=useState(null);
+  return(
+    <div>
+      <Navbar page={page} setPage={setPage} user={user} setShowAuth={setShowAuth} onLogout={()=>setUser(null)}/>
+      {showAuth&&<AuthModal onClose={()=>setShowAuth(false)} onLogin={setUser}/>}
+      {page==='home'&&<HomePage setPage={setPage}/>}
+      {page==='search'&&<SearchPage/>}
+      {page==='campaign'&&<CampaignPage/>}
+      {page==='pricing'&&<PricingPage/>}
+      {page==='dashboard'&&<DashboardPage/>}
+    </div>
+  );
+}
+
+// ── NAVBAR ─────────────────────────────────────────
+function Navbar({page,setPage,user,setShowAuth,onLogout}){
+  const links=[['home','Home'],['search','Find Influencers'],['campaign','Create Campaign'],['pricing','Pricing'],['dashboard','Dashboard']];
+  return(
+    <nav>
+      <div className="logo" onClick={()=>setPage('home')}>
+        <div className="logo-box">🌉</div>
+        Promo<em>bridge</em>
+      </div>
+      <ul className="nav-links">
+        {links.map(([k,l])=><li key={k}><span className={page===k?'active':''} onClick={()=>setPage(k)}>{l}</span></li>)}
+      </ul>
+      <div className="nav-right">
+        {user?(
+          <>
+            <div className="user-chip">👤 {user.email.split('@')[0]}</div>
+            <button className="btn btn-ghost btn-sm" onClick={onLogout}>Logout</button>
+          </>
+        ):(
+          <button className="btn btn-primary" onClick={()=>setShowAuth(true)}>Login / Register</button>
+        )}
+      </div>
+    </nav>
+  );
+}
+
+// ── AUTH MODAL ─────────────────────────────────────
+function AuthModal({onClose,onLogin}){
+  const[tab,setTab]=useState('login');
+  const[form,setForm]=useState({email:'',password:'',role:'brand'});
+  const[msg,setMsg]=useState('');
+  const[err,setErr]=useState('');
+  const[loading,setLoading]=useState(false);
+
+  const doLogin=async()=>{
+    setLoading(true);setErr('');setMsg('');
+    try{
+      const r=await axios.post(`${API}/auth/login`,new URLSearchParams({username:form.email,password:form.password}),{headers:{'Content-Type':'application/x-www-form-urlencoded'}});
+      onLogin({email:r.data.email,role:r.data.role,token:r.data.access_token});
+      onClose();
+    }catch(e){setErr(e.response?.data?.detail||'Login failed')}
+    setLoading(false);
+  };
+  const doRegister=async()=>{
+    setLoading(true);setErr('');setMsg('');
+    try{
+      await axios.post(`${API}/auth/register`,form);
+      setMsg('Account created! Please login.');setTab('login');
+    }catch(e){setErr(e.response?.data?.detail||'Registration failed')}
+    setLoading(false);
+  };
+
+  return(
+    <div className="overlay" onClick={onClose}>
+      <div className="modal" onClick={e=>e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}>✕</button>
+        <div style={{marginBottom:'1.2rem'}}>
+          <div style={{fontFamily:'Syne',fontSize:'1.6rem',fontWeight:800,background:'linear-gradient(135deg,#A78BFA,#F472B6)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>Welcome Back 👋</div>
+          <div style={{color:'var(--text3)',fontSize:'0.85rem',marginTop:'0.2rem'}}>Connect brands with influencers</div>
+        </div>
+        <div className="tabs">
+          <button className={`tab${tab==='login'?' active':''}`} onClick={()=>setTab('login')}>Login</button>
+          <button className={`tab${tab==='register'?' active':''}`} onClick={()=>setTab('register')}>Register</button>
+        </div>
+        {msg&&<div className="alert-ok">{msg}</div>}
+        {err&&<div className="alert-err">{err}</div>}
+        <div className="form-group"><label className="form-label">Email</label><input type="email" className="form-input" placeholder="you@example.com" value={form.email} onChange={e=>setForm({...form,email:e.target.value})}/></div>
+        <div className="form-group"><label className="form-label">Password</label><input type="password" className="form-input" placeholder="••••••••" value={form.password} onChange={e=>setForm({...form,password:e.target.value})}/></div>
+        {tab==='register'&&<div className="form-group"><label className="form-label">I am a</label><select className="form-select" value={form.role} onChange={e=>setForm({...form,role:e.target.value})}><option value="brand">Brand</option><option value="influencer">Influencer</option></select></div>}
+        <button className="btn btn-primary" style={{width:'100%',padding:'0.85rem',marginTop:'0.5rem',justifyContent:'center'}} onClick={tab==='login'?doLogin:doRegister} disabled={loading}>{loading?'Please wait...':(tab==='login'?'🔑 Login':'🚀 Create Account')}</button>
+      </div>
+    </div>
+  );
+}
+
+// ── HOME ───────────────────────────────────────────
+function HomePage({setPage}){
+  return(
+    <div>
+      <section className="hero anim">
+        <div className="hero-pill"><span></span> India's #1 Influencer Marketing Platform</div>
+        <h1>Match Brands with<br/><span className="g">Perfect Influencers</span></h1>
+        <p className="hero-sub">AI-powered platform connecting brands with top Instagram, YouTube & TikTok creators. Real pricing, fraud detection, verified data.</p>
+        <div className="hero-btns">
+          <button className="btn btn-primary" style={{padding:'0.8rem 2rem',fontSize:'1rem'}} onClick={()=>setPage('search')}>🔍 Find Influencers</button>
+          <button className="btn btn-outline" style={{padding:'0.8rem 2rem',fontSize:'1rem'}} onClick={()=>setPage('campaign')}>🚀 Create Campaign</button>
+          <button className="btn btn-ghost" style={{padding:'0.8rem 1.5rem',fontSize:'1rem'}} onClick={()=>setPage('pricing')}>💰 Pricing Tool</button>
+        </div>
+      </section>
+
+      {/* FEATURES */}
+      <div className="container">
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'1rem',marginBottom:'2.5rem'}}>
+          {[
+            {icon:'🤖',title:'AI Matching',desc:'Smart algorithm finds the best influencer-brand fit based on niche, audience & engagement'},
+            {icon:'🛡️',title:'Fraud Detection',desc:'Advanced bot detection & fake follower analysis to protect your campaign budget'},
+            {icon:'📊',title:'Real Analytics',desc:'Live engagement rates, audience demographics & ROI tracking for every campaign'},
+          ].map(f=>(
+            <div key={f.title} className="card" style={{borderTop:'2px solid rgba(124,58,237,0.3)'}}>
+              <div style={{fontSize:'2rem',marginBottom:'0.8rem'}}>{f.icon}</div>
+              <div style={{fontFamily:'Syne',fontSize:'1.1rem',fontWeight:700,marginBottom:'0.4rem'}}>{f.title}</div>
+              <div style={{color:'var(--text2)',fontSize:'0.875rem',lineHeight:1.6}}>{f.desc}</div>
+            </div>
+          ))}
+        </div>
+        <Stats/>
+      </div>
+    </div>
+  );
+}
+
+// ── STATS ──────────────────────────────────────────
+function Stats(){
+  const[s,setS]=useState(null);
+  useEffect(()=>{axios.get(`${API}/stats`).then(r=>setS(r.data)).catch(()=>{})},[]);
+  if(!s)return<div className="loader"><div className="spin"></div></div>;
+  return(
+    <div className="stats-row">
+      {[
+        {n:`${s.total_influencers}+`,l:'Active Influencers'},
+        {n:`${s.total_brands}+`,l:'Partner Brands'},
+        {n:`${s.total_campaigns}+`,l:'Live Campaigns'},
+        {n:`${s.success_rate}%`,l:'Match Success Rate'},
+      ].map(x=>(
+        <div key={x.l} className="stat-box">
+          <div className="stat-num">{x.n}</div>
+          <div className="stat-lbl">{x.l}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── SEARCH ─────────────────────────────────────────
+function SearchPage(){
+  const[influencers,setInfluencers]=useState([]);
+  const[loading,setLoading]=useState(true);
+  const[filters,setFilters]=useState({platform:'',niche:'',min_followers:''});
+
+  const fetch=()=>{
+    setLoading(true);
+    const p={};
+    if(filters.platform)p.platform=filters.platform;
+    if(filters.niche)p.niche=filters.niche;
+    if(filters.min_followers)p.min_followers=filters.min_followers;
+    axios.get(`${API}/influencers`,{params:p})
+      .then(r=>{setInfluencers(r.data);setLoading(false)})
+      .catch(()=>{setInfluencers(mockInfluencers());setLoading(false)});
+  };
+  useEffect(()=>{fetch()},[]);
+
+  return(
+    <div className="container anim">
+      <div style={{marginBottom:'1.5rem'}}>
+        <div className="section-title">🔍 Find Influencers</div>
+        <div className="section-sub">Discover verified creators across India — filter by platform, niche & size</div>
+      </div>
+      <div className="filters">
+        <select className="form-select" value={filters.platform} onChange={e=>setFilters({...filters,platform:e.target.value})}>
+          <option value="">All Platforms</option>
+          <option value="instagram">📸 Instagram</option>
+          <option value="youtube">▶️ YouTube</option>
+          <option value="tiktok">🎵 TikTok</option>
+        </select>
+        <select className="form-select" value={filters.niche} onChange={e=>setFilters({...filters,niche:e.target.value})}>
+          <option value="">All Niches</option>
+          {['Fitness','Fashion','Tech','Food','Travel','Entertainment'].map(n=><option key={n} value={n}>{n}</option>)}
+        </select>
+        <select className="form-select" value={filters.min_followers} onChange={e=>setFilters({...filters,min_followers:e.target.value})}>
+          <option value="">Any Size</option>
+          <option value="10000">10K+ (Micro)</option>
+          <option value="100000">100K+ (Mid)</option>
+          <option value="1000000">1M+ (Mega)</option>
+          <option value="10000000">10M+ (Celebrity)</option>
+        </select>
+        <button className="btn btn-primary" onClick={fetch}>Apply Filters</button>
+      </div>
+      {loading?<div className="loader"><div className="spin"></div><span>Loading influencers...</span></div>:(
+        <div className="card-grid">
+          {influencers.map((inf,i)=><InfluencerCard key={inf.influencer_id||i} influencer={inf}/>)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── INFLUENCER CARD ────────────────────────────────
+function InfluencerCard({influencer}){
+  const[modal,setModal]=useState(false);
+  const match=Math.floor(Math.random()*14+83);
+  const nc=NICHE_COLOR[influencer.niche]||'#A78BFA';
+  const price=Math.floor((influencer.followers_count/1000)*830*(1+(influencer.engagement_rate||3)/100));
+
+  return(
+    <>
+    <div className="inf-card" onClick={()=>setModal(true)}>
+      <div className="top-bar"></div>
+      <div className="avatar-wrap">
+        <img className="avatar-img" src={avatar(influencer.full_name)} alt={influencer.full_name} style={{border:`2px solid ${nc}44`}}/>
+        <div className="avatar-platform" style={{background:PLAT_COLOR[influencer.platform]||'#333'}}>
+          {PLAT_ICON[influencer.platform]||'🌐'}
+        </div>
+      </div>
+      <div className="inf-name">{influencer.full_name}</div>
+      <div className="inf-handle">@{(influencer.handle||'').replace('.pb','').replace(/\s/g,'')}</div>
+      <div className="tags">
+        <span className="tag" style={{background:`${PLAT_COLOR[influencer.platform]}22`,color:PLAT_COLOR[influencer.platform]||'#A78BFA',border:`1px solid ${PLAT_COLOR[influencer.platform]}44`}}>{influencer.platform}</span>
+        <span className="tag" style={{background:`${nc}18`,color:nc,border:`1px solid ${nc}35`}}>{influencer.niche}</span>
+      </div>
+      <div className="match-bar">✦ AI Match Score: {match}%</div>
+      <div className="inf-stats">
+        <div className="stat"><span className="inf-stat-val">{fNum(influencer.followers_count||0)}</span><span className="inf-stat-lbl">Followers</span></div>
+        <div className="stat"><span className="inf-stat-val">{influencer.engagement_rate||0}%</span><span className="inf-stat-lbl">Engagement</span></div>
+        <div className="stat"><span className="inf-stat-val" style={{color:'#10B981'}}>{fINR(price)}</span><span className="inf-stat-lbl">Est. Price</span></div>
+      </div>
+    </div>
+
+    {modal&&(
+      <div className="overlay" onClick={()=>setModal(false)}>
+        <div className="modal" onClick={e=>e.stopPropagation()} style={{maxWidth:460}}>
+          <button className="modal-close" onClick={()=>setModal(false)}>✕</button>
+          <div style={{textAlign:'center',marginBottom:'1.3rem'}}>
+            <div style={{width:100,height:100,borderRadius:'50%',margin:'0 auto 0.8rem',border:`3px solid ${nc}55`,overflow:'hidden',background:`${nc}18`}}>
+              <img src={avatar(influencer.full_name)} alt={influencer.full_name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+            </div>
+            <div style={{fontFamily:'Syne',fontSize:'1.4rem',fontWeight:800}}>{influencer.full_name}</div>
+            <div style={{color:'var(--text3)',fontSize:'0.85rem',margin:'0.2rem 0'}}>@{(influencer.handle||'').replace('.pb','')}</div>
+            <div style={{color:'var(--text2)',fontSize:'0.85rem',margin:'0.3rem 0'}}>{influencer.bio||'Content creator'}</div>
+            <div style={{color:'var(--text3)',fontSize:'0.8rem'}}>📍 {influencer.location||'India'}</div>
+          </div>
+
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'0.7rem',marginBottom:'1.1rem'}}>
+            {[{l:'Followers',v:fNum(influencer.followers_count||0)},{l:'Engagement',v:`${influencer.engagement_rate||0}%`},{l:'Match',v:`${match}%`}].map(x=>(
+              <div key={x.l} style={{background:'var(--bg3)',border:'1px solid var(--border)',borderRadius:10,padding:'0.7rem',textAlign:'center'}}>
+                <div style={{fontFamily:'Syne',fontSize:'1.15rem',fontWeight:800,color:'var(--p3)'}}>{x.v}</div>
+                <div style={{fontSize:'0.72rem',color:'var(--text3)',marginTop:'0.15rem'}}>{x.l}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{background:'var(--bg3)',border:'1px solid var(--border)',borderRadius:12,padding:'1rem',marginBottom:'1rem'}}>
+            {[
+              {k:'Platform',v:`${PLAT_ICON[influencer.platform]} ${influencer.platform}`},
+              {k:'Niche',v:influencer.niche},
+              {k:'Est. Price/Post',v:fINR(price)},
+              {k:'Location',v:influencer.location||'India'},
+            ].map((row,i)=>(
+              <div key={row.k} style={{display:'flex',justifyContent:'space-between',padding:'0.4rem 0',borderBottom:i<3?'1px solid var(--border)':'none'}}>
+                <span style={{color:'var(--text3)',fontSize:'0.85rem'}}>{row.k}</span>
+                <span style={{fontWeight:600,fontSize:'0.85rem',color:row.k==='Est. Price/Post'?'#10B981':'var(--text)'}}>{row.v}</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{display:'flex',gap:'0.7rem'}}>
+            <a href={profileLink(influencer.handle||'',influencer.platform)} target="_blank" rel="noreferrer" className="btn btn-outline" style={{flex:1,justifyContent:'center',textDecoration:'none'}}>View Profile 🔗</a>
+            <button className="btn btn-primary" style={{flex:1,justifyContent:'center'}} onClick={()=>{alert(`✅ Request sent to ${influencer.full_name}!`);setModal(false)}}>Collaborate 🤝</button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
+  );
+}
+
+// ── CAMPAIGN PAGE ──────────────────────────────────
+function CampaignPage(){
+  const[form,setForm]=useState({title:'',description:'',niche:'',platform:'',budget:'',min_followers:''});
+  const[done,setDone]=useState(false);
+  const[loading,setLoading]=useState(false);
+
+  const submit=()=>{
+    setLoading(true);
+    axios.post(`${API}/campaigns`,form)
+      .then(()=>{setDone(true);setLoading(false)})
+      .catch(()=>{setDone(true);setLoading(false)});
+  };
+
+  if(done)return(
+    <div className="container anim" style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'60vh'}}>
+      <div className="card" style={{textAlign:'center',maxWidth:500,padding:'3rem'}}>
+        <div style={{fontSize:'4rem',marginBottom:'1rem'}}>🎉</div>
+        <div style={{fontFamily:'Syne',fontSize:'1.6rem',fontWeight:800,marginBottom:'0.5rem'}}>Campaign Created!</div>
+        <div style={{color:'var(--text2)',marginBottom:'1.5rem'}}>Our AI is now finding the best influencer matches for your campaign.</div>
+        <button className="btn btn-primary" style={{justifyContent:'center'}} onClick={()=>setDone(false)}>Create Another</button>
+      </div>
+    </div>
+  );
+
+  return(
+    <div className="container anim">
+      <div style={{marginBottom:'1.5rem'}}>
+        <div className="section-title">🚀 Create Campaign</div>
+        <div className="section-sub">Tell us your goals — AI will match you with the perfect influencers</div>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1.2fr 1fr',gap:'2rem',alignItems:'start'}}>
+        <div className="card">
+          <div className="form-group"><label className="form-label">Campaign Name</label><input type="text" className="form-input" placeholder="e.g. Diwali Fashion Collection 2025" value={form.title} onChange={e=>setForm({...form,title:e.target.value})}/></div>
+          <div className="form-group"><label className="form-label">Description</label><textarea className="form-textarea" placeholder="Describe your campaign goals, target audience, deliverables..." value={form.description} onChange={e=>setForm({...form,description:e.target.value})}></textarea></div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1rem'}}>
+            <div className="form-group"><label className="form-label">Platform</label><select className="form-select" value={form.platform} onChange={e=>setForm({...form,platform:e.target.value})}><option value="">Select</option><option value="instagram">📸 Instagram</option><option value="youtube">▶️ YouTube</option><option value="tiktok">🎵 TikTok</option><option value="any">All Platforms</option></select></div>
+            <div className="form-group"><label className="form-label">Niche</label><select className="form-select" value={form.niche} onChange={e=>setForm({...form,niche:e.target.value})}><option value="">Select</option>{['Fashion','Tech','Fitness','Food','Travel','Entertainment'].map(n=><option key={n}>{n}</option>)}</select></div>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1rem'}}>
+            <div className="form-group"><label className="form-label">Budget (₹)</label><input type="number" className="form-input" placeholder="e.g. 500000" value={form.budget} onChange={e=>setForm({...form,budget:e.target.value})}/><small className="hint">Enter in ₹ — e.g. 5,00,000</small></div>
+            <div className="form-group"><label className="form-label">Min Followers</label><input type="number" className="form-input" placeholder="e.g. 100000" value={form.min_followers} onChange={e=>setForm({...form,min_followers:e.target.value})}/></div>
+          </div>
+          <button className="btn btn-primary" style={{width:'100%',padding:'0.9rem',justifyContent:'center',fontSize:'0.95rem'}} onClick={submit} disabled={loading||!form.title}>{loading?'Creating...':'🤖 Create & Find Matches'}</button>
+        </div>
+        <div>
+          <div className="card" style={{marginBottom:'1rem',background:'linear-gradient(135deg,rgba(124,58,237,0.12),rgba(244,114,182,0.08))',borderColor:'rgba(124,58,237,0.2)'}}>
+            <div style={{fontFamily:'Syne',fontSize:'1rem',fontWeight:700,marginBottom:'1rem'}}>💡 How it works</div>
+            {[
+              {n:'1',t:'Describe your campaign','d':'Tell us your niche, budget & target platform'},
+              {n:'2',t:'AI matches influencers','d':'Our algorithm finds best-fit creators in seconds'},
+              {n:'3',t:'Review & connect','d':'Chat, negotiate and launch your campaign'},
+            ].map(s=>(
+              <div key={s.n} style={{display:'flex',gap:'0.8rem',marginBottom:'1rem'}}>
+                <div style={{width:28,height:28,borderRadius:'50%',background:'rgba(124,58,237,0.25)',border:'1px solid rgba(124,58,237,0.4)',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:'0.8rem',flexShrink:0}}>{s.n}</div>
+                <div><div style={{fontWeight:600,fontSize:'0.875rem'}}>{s.t}</div><div style={{color:'var(--text3)',fontSize:'0.8rem',marginTop:'0.15rem'}}>{s.d}</div></div>
+              </div>
+            ))}
+          </div>
+          <div className="card">
+            <div style={{fontFamily:'Syne',fontSize:'0.95rem',fontWeight:700,marginBottom:'0.8rem'}}>🏆 Popular Niches</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:'0.5rem'}}>
+              {['Fashion','Tech','Fitness','Food','Travel','Entertainment'].map(n=>(
+                <span key={n} className="badge" style={{background:`${NICHE_COLOR[n]||'#A78BFA'}18`,color:NICHE_COLOR[n]||'#A78BFA',border:`1px solid ${NICHE_COLOR[n]||'#A78BFA'}35`,cursor:'pointer',fontSize:'0.8rem',padding:'0.35rem 0.75rem'}}
+                  onClick={()=>setForm({...form,niche:n})}>{n}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── PRICING PAGE ───────────────────────────────────
+function PricingPage(){
+  const[inp,setInp]=useState({followers:100000,er:3.5,platform:'instagram',niche:'Fashion'});
+  const[result,setResult]=useState(null);
+
+  const TIER_CPM={nano:150,micro:120,mid:100,macro:80,mega:60,celeb:40};
+  const NICHE_MULT={Fashion:1.3,Tech:1.5,Fitness:1.2,Food:1.1,Travel:1.4,Entertainment:1.0};
+  const CONTENT={
+    instagram:[{k:'post',l:'📸 Static Post',s:'Brand integration in feed',m:1.0},{k:'reel',l:'🎬 Reel',s:'Short-form video content',m:1.5},{k:'story',l:'⏱️ Story (24hr)',s:'Ephemeral story post',m:0.4},{k:'carousel',l:'🖼️ Carousel Post',s:'Multi-image swipe post',m:1.2}],
+    youtube:[{k:'video',l:'🎥 Dedicated Video',s:'Full video about brand',m:2.5},{k:'integration',l:'📌 Brand Integration',s:'Mention in existing video',m:1.5},{k:'short',l:'⚡ YouTube Short',s:'60-sec short content',m:0.8}],
+    tiktok:[{k:'video',l:'🎵 TikTok Video',s:'Native TikTok content',m:0.6},{k:'duet',l:'🤝 Duet / Collab',s:'Duet with brand account',m:0.5}],
+  };
+
+  const getTier=f=>{
+    if(f<10000)return{name:'Nano',cpm:TIER_CPM.nano};
+    if(f<100000)return{name:'Micro',cpm:TIER_CPM.micro};
+    if(f<500000)return{name:'Mid-Tier',cpm:TIER_CPM.mid};
+    if(f<1000000)return{name:'Macro',cpm:TIER_CPM.macro};
+    if(f<10000000)return{name:'Mega',cpm:TIER_CPM.mega};
+    return{name:'Celebrity',cpm:TIER_CPM.celeb};
+  };
+
+  const calc=()=>{
+    const f=Number(inp.followers),er=Number(inp.er);
+    const tier=getTier(f);
+    const nm=NICHE_MULT[inp.niche]||1.0;
+    const em=1+(er-3)*0.05;
+    const base=(f/1000)*tier.cpm*nm*Math.max(0.7,em);
+    const contents=(CONTENT[inp.platform]||[]).map(c=>({
+      ...c,
+      price:Math.round(base*c.m),
+      min:Math.round(base*c.m*0.7),
+      max:Math.round(base*c.m*1.4),
+    }));
+    setResult({tier,contents,base:Math.round(base),nm,f,er});
+  };
+
+  const tierColors={Nano:'#10B981',Micro:'#22D3EE',['Mid-Tier']:'#818CF8',Macro:'#F472B6',Mega:'#FB923C',Celebrity:'#FBBF24'};
+
+  return(
+    <div className="container anim">
+      <div style={{marginBottom:'1.5rem'}}>
+        <div className="section-title">💰 Pricing Calculator</div>
+        <div className="section-sub">Real Indian influencer market rates — by tier, platform, niche & content type</div>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1.3fr',gap:'2rem',alignItems:'start'}}>
+
+        {/* LEFT */}
+        <div className="card">
+          <div style={{fontFamily:'Syne',fontSize:'1rem',fontWeight:700,marginBottom:'1.2rem',color:'var(--text2)'}}>INFLUENCER DETAILS</div>
+          <div className="form-group">
+            <label className="form-label">Followers Count</label>
+            <input type="number" className="form-input" value={inp.followers} onChange={e=>setInp({...inp,followers:e.target.value})}/>
+            <small className="hint">Currently: {fNum(Number(inp.followers))} followers</small>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Engagement Rate (%)</label>
+            <input type="number" className="form-input" step="0.1" value={inp.er} onChange={e=>setInp({...inp,er:e.target.value})}/>
+            <small className="hint">India avg: 3–6% · Excellent: 6%+</small>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Platform</label>
+            <select className="form-select" value={inp.platform} onChange={e=>setInp({...inp,platform:e.target.value})}>
+              <option value="instagram">📸 Instagram</option>
+              <option value="youtube">▶️ YouTube</option>
+              <option value="tiktok">🎵 TikTok</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Niche / Category</label>
+            <select className="form-select" value={inp.niche} onChange={e=>setInp({...inp,niche:e.target.value})}>
+              {['Fashion','Tech','Fitness','Food','Travel','Entertainment'].map(n=><option key={n}>{n}</option>)}
+            </select>
+          </div>
+          <button className="btn btn-primary" style={{width:'100%',padding:'0.9rem',justifyContent:'center'}} onClick={calc}>🧮 Calculate Pricing</button>
+
+          {/* TIER GUIDE */}
+          <div style={{marginTop:'1.5rem',padding:'1rem',background:'var(--bg3)',borderRadius:12,border:'1px solid var(--border)'}}>
+            <div style={{fontSize:'0.75rem',fontWeight:600,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'0.5px',marginBottom:'0.7rem'}}>Influencer Tiers</div>
+            {[['Nano','1K–10K'],['Micro','10K–100K'],['Mid-Tier','100K–500K'],['Macro','500K–1M'],['Mega','1M–10M'],['Celebrity','10M+']].map(([t,r])=>(
+              <div key={t} style={{display:'flex',justifyContent:'space-between',padding:'0.3rem 0',borderBottom:'1px solid var(--border)'}}>
+                <span style={{fontSize:'0.8rem',fontWeight:600,color:tierColors[t]||'var(--p3)'}}>{t}</span>
+                <span style={{fontSize:'0.8rem',color:'var(--text3)'}}>{r}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT */}
+        <div>
+          {!result?(
+            <div className="card" style={{textAlign:'center',padding:'3rem',border:'1px dashed rgba(124,58,237,0.25)'}}>
+              <div style={{fontSize:'3.5rem',marginBottom:'1rem'}}>💡</div>
+              <div style={{fontFamily:'Syne',fontSize:'1.1rem',fontWeight:700,marginBottom:'0.5rem'}}>Ready to Calculate</div>
+              <div style={{color:'var(--text3)',fontSize:'0.875rem'}}>Fill in the details and hit Calculate to see the full pricing breakdown</div>
+            </div>
+          ):(
+            <>
+              {/* TIER CARD */}
+              <div style={{background:`linear-gradient(135deg,${tierColors[result.tier.name]||'#7C3AED'}22,${tierColors[result.tier.name]||'#7C3AED'}10)`,border:`1px solid ${tierColors[result.tier.name]||'#7C3AED'}40`,borderRadius:16,padding:'1.3rem',marginBottom:'1rem',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
                 <div>
-                    <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} user={user} setShowAuth={setShowAuth} handleLogout={handleLogout} />
-                    {showAuth && <AuthModal setShowAuth={setShowAuth} setUser={setUser} />}
-                    {currentPage === 'home' && <HomePage setCurrentPage={setCurrentPage} />}
-                    {currentPage === 'search' && <SearchPage />}
-                    {currentPage === 'campaign' && <CampaignPage />}
-                    {currentPage === 'pricing' && <PricingPage />}
-                    {currentPage === 'dashboard' && <DashboardPage />}
+                  <div style={{fontSize:'0.75rem',fontWeight:600,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'0.5px'}}>Tier</div>
+                  <div style={{fontFamily:'Syne',fontSize:'1.8rem',fontWeight:800,color:tierColors[result.tier.name]||'var(--p3)'}}>{result.tier.name}</div>
+                  <div style={{color:'var(--text2)',fontSize:'0.8rem'}}>{fNum(result.f)} followers · {result.er}% engagement</div>
                 </div>
-            );
-        }
-
-        // Auth Modal
-        function AuthModal({ setShowAuth, setUser }) {
-            const [tab, setTab] = useState('login');
-            const [form, setForm] = useState({ email: '', password: '', role: 'brand' });
-            const [msg, setMsg] = useState(null);
-            const [error, setError] = useState(null);
-            const [loading, setLoading] = useState(false);
-
-            const handleLogin = async () => {
-                setLoading(true); setError(null); setMsg(null);
-                try {
-                    const res = await axios.post(`${API_BASE_URL}/auth/login`,
-                        new URLSearchParams({ username: form.email, password: form.password }),
-                        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }}
-                    );
-                    setUser({ email: res.data.email, role: res.data.role, token: res.data.access_token });
-                    setShowAuth(false);
-                } catch(e) {
-                    setError(e.response?.data?.detail || 'Login failed. Check your credentials.');
-                }
-                setLoading(false);
-            };
-
-            const handleRegister = async () => {
-                setLoading(true); setError(null); setMsg(null);
-                try {
-                    await axios.post(`${API_BASE_URL}/auth/register`, form);
-                    setMsg('Account created! Please login now.');
-                    setTab('login');
-                } catch(e) {
-                    setError(e.response?.data?.detail || 'Registration failed.');
-                }
-                setLoading(false);
-            };
-
-            return (
-                <div className="modal-overlay" onClick={() => setShowAuth(false)}>
-                    <div className="modal" onClick={e => e.stopPropagation()}>
-                        <button className="modal-close" onClick={() => setShowAuth(false)}>✕</button>
-                        <h2>🌉 Promobridge</h2>
-                        <p style={{color: 'var(--gray)', marginBottom: '1.5rem'}}>Connect brands with influencers</p>
-
-                        <div className="modal-tabs">
-                            <button className={`modal-tab ${tab === 'login' ? 'active' : ''}`} onClick={() => setTab('login')}>Login</button>
-                            <button className={`modal-tab ${tab === 'register' ? 'active' : ''}`} onClick={() => setTab('register')}>Register</button>
-                        </div>
-
-                        {msg && <div className="alert-success">{msg}</div>}
-                        {error && <div className="alert-error">{error}</div>}
-
-                        <div className="form-group">
-                            <label className="form-label">Email</label>
-                            <input type="email" className="form-input" placeholder="you@example.com"
-                                value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
-                        </div>
-
-                        <div className="form-group">
-                            <label className="form-label">Password</label>
-                            <input type="password" className="form-input" placeholder="••••••••"
-                                value={form.password} onChange={e => setForm({...form, password: e.target.value})} />
-                        </div>
-
-                        {tab === 'register' && (
-                            <div className="form-group">
-                                <label className="form-label">I am a...</label>
-                                <select className="form-select" value={form.role} onChange={e => setForm({...form, role: e.target.value})}>
-                                    <option value="brand">Brand</option>
-                                    <option value="influencer">Influencer</option>
-                                </select>
-                            </div>
-                        )}
-
-                        <button className="btn btn-primary" style={{width: '100%', padding: '1rem', marginTop: '0.5rem'}}
-                            onClick={tab === 'login' ? handleLogin : handleRegister}
-                            disabled={loading}>
-                            {loading ? '⏳ Please wait...' : tab === 'login' ? '🔑 Login' : '🚀 Create Account'}
-                        </button>
-                    </div>
+                <div style={{textAlign:'right'}}>
+                  <div style={{fontSize:'0.72rem',color:'var(--text3)'}}>Base CPM</div>
+                  <div style={{fontFamily:'Syne',fontSize:'2rem',fontWeight:800,color:tierColors[result.tier.name]||'var(--p3)'}}>₹{result.tier.cpm}</div>
+                  <div style={{fontSize:'0.72rem',color:'var(--text3)'}}>per 1K followers</div>
                 </div>
-            );
-        }
-        
-        // Navbar Component
-        function Navbar({ currentPage, setCurrentPage, user, setShowAuth, handleLogout }) {
-            return (
-                <nav className="navbar">
-                    <div className="logo" onClick={() => setCurrentPage('home')}>
-                        <div className="logo-icon">🌉</div>
-                        <span>Promo<span className="highlight">bridge</span></span>
+              </div>
+
+              {/* CONTENT TYPE BREAKDOWN */}
+              <div className="card">
+                <div style={{fontFamily:'Syne',fontSize:'1rem',fontWeight:700,marginBottom:'1rem'}}>Pricing by Content Type</div>
+                {result.contents.map(c=>(
+                  <div key={c.k} className="content-row">
+                    <div>
+                      <div className="content-row-label">{c.l}</div>
+                      <div className="content-row-sub">{c.s}</div>
                     </div>
-                    
-                    <ul className="nav-menu">
-                        <li><span className={`nav-link ${currentPage === 'home' ? 'active' : ''}`} onClick={() => setCurrentPage('home')}>Home</span></li>
-                        <li><span className={`nav-link ${currentPage === 'search' ? 'active' : ''}`} onClick={() => setCurrentPage('search')}>Find Influencers</span></li>
-                        <li><span className={`nav-link ${currentPage === 'campaign' ? 'active' : ''}`} onClick={() => setCurrentPage('campaign')}>Create Campaign</span></li>
-                        <li><span className={`nav-link ${currentPage === 'pricing' ? 'active' : ''}`} onClick={() => setCurrentPage('pricing')}>Pricing</span></li>
-                        <li><span className={`nav-link ${currentPage === 'dashboard' ? 'active' : ''}`} onClick={() => setCurrentPage('dashboard')}>Dashboard</span></li>
-                    </ul>
-                    
-                    {user ? (
-                        <div style={{display:'flex', alignItems:'center', gap:'1rem'}}>
-                            <span style={{fontWeight:600, color:'var(--primary)'}}>👤 {user.email.split('@')[0]}</span>
-                            <button className="btn btn-secondary" style={{padding:'0.5rem 1rem'}} onClick={handleLogout}>Logout</button>
-                        </div>
-                    ) : (
-                        <button className="btn btn-primary" onClick={() => setShowAuth(true)}>Login / Register</button>
-                    )}
-                </nav>
-            );
-        }
-        
-        // Home Page
-        function HomePage({ setCurrentPage }) {
-            return (
-                <div>
-                    <section className="hero">
-                        <div className="hero-badge">✦ India's #1 Influencer Marketing Platform</div>
-                        <h1>Connect Brands with<br/><span className="gradient-text">Perfect Influencers</span></h1>
-                        <p>AI-powered matching across Instagram, YouTube & TikTok. Real pricing, fraud detection, and data-driven campaigns — all in one place.</p>
-                        <div className="hero-buttons">
-                            <button 
-                                className="btn btn-primary"
-                                onClick={() => setCurrentPage('search')}
-                            >
-                                🔍 Find Influencers
-                            </button>
-                            <button 
-                                className="btn btn-secondary"
-                                onClick={() => setCurrentPage('campaign')}
-                            >
-                                🚀 Create Campaign
-                            </button>
-                            <button 
-                                className="btn btn-secondary"
-                                onClick={() => setCurrentPage('pricing')}
-                            >
-                                💰 Calculate Pricing
-                            </button>
-                        </div>
-                    </section>
-                    
-                    <div className="container">
-                        <StatsSection />
+                    <div style={{textAlign:'right',flexShrink:0,marginLeft:'1rem'}}>
+                      <div className="content-row-price">{fINR(c.price)}</div>
+                      <div className="content-row-range">{fINR(c.min)} – {fINR(c.max)}</div>
                     </div>
+                  </div>
+                ))}
+                <div style={{marginTop:'1rem',background:'rgba(124,58,237,0.08)',border:'1px solid rgba(124,58,237,0.2)',borderRadius:10,padding:'0.8rem',fontSize:'0.8rem',color:'var(--p3)'}}>
+                  <strong>✦ {inp.niche} premium:</strong> {Math.round((result.nm-1)*100)}% higher rates · <strong>Engagement boost:</strong> {result.er>3?'+'+(((result.er-3)*0.05)*100).toFixed(0)+'%':'standard'}
                 </div>
-            );
-        }
-        
-        // Stats Section
-        function StatsSection() {
-            const [stats, setStats] = useState(null);
-            
-            useEffect(() => {
-                axios.get(`${API_BASE_URL}/stats`)
-                    .then(response => setStats(response.data))
-                    .catch(error => console.error('Error fetching stats:', error));
-            }, []);
-            
-            if (!stats) return <div className="loading"><div className="spinner"></div>Loading stats...</div>;
-            
-            return (
-                <div className="stats-grid">
-                    <div className="stat-card">
-                        <div className="stat-card-value">{stats.total_influencers}+</div>
-                        <div className="stat-card-label">Active Influencers</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-card-value">{stats.total_brands}+</div>
-                        <div className="stat-card-label">Brands</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-card-value">{stats.total_campaigns}+</div>
-                        <div className="stat-card-label">Campaigns</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-card-value">{stats.success_rate}%</div>
-                        <div className="stat-card-label">Success Rate</div>
-                    </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── DASHBOARD ──────────────────────────────────────
+function DashboardPage(){
+  const[campaigns,setCampaigns]=useState([]);
+  const[loading,setLoading]=useState(true);
+  useEffect(()=>{
+    axios.get(`${API}/campaigns`,{params:{limit:12}})
+      .then(r=>{setCampaigns(r.data);setLoading(false)})
+      .catch(()=>setLoading(false));
+  },[]);
+
+  return(
+    <div className="container anim">
+      <Stats/>
+      <div style={{marginBottom:'1.2rem',marginTop:'1rem'}}>
+        <div className="section-title">📢 Active Campaigns</div>
+        <div className="section-sub">Live campaigns from partner brands seeking influencer collaborations</div>
+      </div>
+      {loading?<div className="loader"><div className="spin"></div></div>:campaigns.length===0?(
+        <div className="card" style={{textAlign:'center',padding:'3rem',border:'1px dashed rgba(124,58,237,0.2)'}}>
+          <div style={{fontSize:'3rem',marginBottom:'1rem'}}>📭</div>
+          <div style={{color:'var(--text2)'}}>No campaigns yet. Create one to get started!</div>
+        </div>
+      ):(
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:'1rem'}}>
+          {campaigns.map(c=>{
+            const nc=NICHE_COLOR[c.niche]||'#A78BFA';
+            return(
+              <div key={c.campaign_id} className="camp-card">
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'0.8rem'}}>
+                  <span className="badge" style={{background:`${nc}18`,color:nc,border:`1px solid ${nc}30`}}>{c.niche||'General'}</span>
+                  <span className="badge badge-g" style={{fontSize:'0.7rem'}}>{c.status||'active'}</span>
                 </div>
-            );
-        }
-        
-        // Search Page
-        function SearchPage() {
-            const [influencers, setInfluencers] = useState([]);
-            const [loading, setLoading] = useState(true);
-            const [filters, setFilters] = useState({
-                platform: '',
-                niche: '',
-                minFollowers: ''
-            });
-            
-            useEffect(() => {
-                fetchInfluencers();
-            }, []);
-            
-            const fetchInfluencers = () => {
-                setLoading(true);
-                const params = {};
-                if (filters.platform) params.platform = filters.platform;
-                if (filters.niche) params.niche = filters.niche;
-                if (filters.minFollowers) params.min_followers = filters.minFollowers;
-                
-                axios.get(`${API_BASE_URL}/influencers`, { params })
-                    .then(response => {
-                        setInfluencers(response.data);
-                        setLoading(false);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        // Show mock data if API fails
-                        setInfluencers(getMockInfluencers());
-                        setLoading(false);
-                    });
-            };
-            
-            return (
-                <div className="container">
-                    <div className="search-container">
-                        <h2 style={{marginBottom: '1.5rem', fontFamily: 'Outfit', fontSize: '2rem'}}>
-                            🔍 Find Perfect Influencers
-                        </h2>
-                        
-                        <div className="search-bar">
-                            <select 
-                                className="form-select"
-                                value={filters.platform}
-                                onChange={(e) => setFilters({...filters, platform: e.target.value})}
-                            >
-                                <option value="">All Platforms</option>
-                                <option value="instagram">Instagram</option>
-                                <option value="youtube">YouTube</option>
-                                <option value="tiktok">TikTok</option>
-                                <option value="twitter">Twitter</option>
-                            </select>
-                            
-                            <select 
-                                className="form-select"
-                                value={filters.niche}
-                                onChange={(e) => setFilters({...filters, niche: e.target.value})}
-                            >
-                                <option value="">All Niches</option>
-                                <option value="Fashion">Fashion</option>
-                                <option value="Tech">Tech</option>
-                                <option value="Food">Food</option>
-                                <option value="Fitness">Fitness</option>
-                                <option value="Travel">Travel</option>
-                            </select>
-                            
-                            <input 
-                                type="number"
-                                className="form-input"
-                                placeholder="Min Followers"
-                                value={filters.minFollowers}
-                                onChange={(e) => setFilters({...filters, minFollowers: e.target.value})}
-                            />
-                            
-                            <button 
-                                className="btn btn-primary"
-                                onClick={fetchInfluencers}
-                            >
-                                Search
-                            </button>
-                        </div>
+                <div style={{fontFamily:'Syne',fontSize:'1rem',fontWeight:700,marginBottom:'0.4rem',lineHeight:1.3}}>{c.title}</div>
+                <div style={{color:'var(--text3)',fontSize:'0.8rem',marginBottom:'1rem',lineHeight:1.5}}>{c.description?c.description.slice(0,80)+'...':''}</div>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'0.5rem',marginBottom:'1rem'}}>
+                  {[{l:'Budget',v:fINR(c.budget),c:'#10B981'},{l:'Platform',v:c.platform||'All',c:'var(--p3)'},{l:'Min Followers',v:fNum(c.min_followers)||'Any',c:'var(--gold)'}].map(x=>(
+                    <div key={x.l} style={{background:'var(--bg3)',borderRadius:8,padding:'0.5rem',textAlign:'center',border:'1px solid var(--border)'}}>
+                      <div style={{fontFamily:'Syne',fontWeight:700,fontSize:'0.85rem',color:x.c}}>{x.v}</div>
+                      <div style={{fontSize:'0.68rem',color:'var(--text3)',marginTop:'0.1rem'}}>{x.l}</div>
                     </div>
-                    
-                    {loading ? (
-                        <div className="loading"><div className="spinner"></div>Loading influencers...</div>
-                    ) : (
-                        <div className="card-grid">
-                            {influencers.map((inf, index) => (
-                                <InfluencerCard key={index} influencer={inf} />
-                            ))}
-                        </div>
-                    )}
+                  ))}
                 </div>
+                <button className="btn btn-primary btn-sm" style={{width:'100%',justifyContent:'center'}}
+                  onClick={()=>alert(`🤖 Finding influencers for: ${c.title}\n\nBudget: ${fINR(c.budget)}\nPlatform: ${c.platform}\nNiche: ${c.niche}`)}>
+                  🤖 Find Matching Influencers
+                </button>
+              </div>
             );
-        }
-        
-        // Platform icons
-        const platformIcons = { instagram: '📸', youtube: '▶️', tiktok: '🎵', twitter: '🐦' };
-        const platformColors = { instagram: '#E1306C', youtube: '#FF0000', tiktok: '#000000', twitter: '#1DA1F2' };
-        const nicheColors = { Fitness: '#10b981', Fashion: '#ec4899', Tech: '#6366f1', Entertainment: '#f59e0b', Food: '#ef4444', Travel: '#14b8a6' };
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
-        function getAvatarUrl(name) {
-            // Use DiceBear notionists style - beautiful illustrated portraits
-            const seed = encodeURIComponent(name);
-            return `https://api.dicebear.com/7.x/notionists/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&backgroundType=gradientLinear`;
-        }
+// ── MOCK DATA ──────────────────────────────────────
+function mockInfluencers(){
+  return[
+    {influencer_id:'m1',full_name:'Virat Kohli',handle:'virat.kohli',platform:'instagram',niche:'Fitness',followers_count:266000000,engagement_rate:4.7,bio:'Cricket legend 🏏',location:'Mumbai'},
+    {influencer_id:'m2',full_name:'Technical Guruji',handle:'technicalguruji',platform:'youtube',niche:'Tech',followers_count:23000000,engagement_rate:3.8,bio:'Tech in Hindi 🤖',location:'Dubai'},
+    {influencer_id:'m3',full_name:'Kusha Kapila',handle:'kusha.kapila',platform:'instagram',niche:'Fashion',followers_count:4300000,engagement_rate:5.1,bio:'Fashion creator 👗',location:'Delhi'},
+    {influencer_id:'m4',full_name:'Kabita Singh',handle:'kabitaskitchen',platform:'youtube',niche:'Food',followers_count:14000000,engagement_rate:5.2,bio:'Simple recipes 🍛',location:'Bhubaneswar'},
+    {influencer_id:'m5',full_name:'Mumbiker Nikhil',handle:'mumbiker_nikhil',platform:'youtube',niche:'Travel',followers_count:4100000,engagement_rate:4.3,bio:'Riding India 🏍️',location:'Mumbai'},
+    {influencer_id:'m6',full_name:'Tech Burner',handle:'techburner',platform:'youtube',niche:'Tech',followers_count:12000000,engagement_rate:4.5,bio:'Tech reviews 📱',location:'Delhi'},
+  ];
+}
 
-        function getPlatformLink(handle, platform) {
-            const h = handle.replace('.pb', '');
-            if (platform === 'instagram') return `https://instagram.com/${h}`;
-            if (platform === 'youtube') return `https://youtube.com/@${h}`;
-            if (platform === 'tiktok') return `https://tiktok.com/@${h}`;
-            return '#';
-        }
-
-        // Influencer Card
-        function InfluencerCard({ influencer }) {
-            const [showModal, setShowModal] = useState(false);
-            const [imgLoaded, setImgLoaded] = useState(false);
-            const matchScore = Math.floor(Math.random() * 15 + 82);
-            const price = Math.floor((influencer.followers_count / 1000) * 830 * (1 + influencer.engagement_rate / 100));
-            const nicheColor = nicheColors[influencer.niche] || '#888';
-
-            return (
-                <>
-                <div className="influencer-card" onClick={() => setShowModal(true)}>
-                    {/* Avatar */}
-                    <div style={{position:'relative', width:90, height:90, margin:'0 auto 1rem'}}>
-                        <div style={{
-                            width:90, height:90, borderRadius:'50%',
-                            background:`linear-gradient(135deg, ${nicheColor}33, ${nicheColor}66)`,
-                            border:`2px solid ${nicheColor}55`,
-                            overflow:'hidden',
-                            display:'flex', alignItems:'center', justifyContent:'center'
-                        }}>
-                            <img
-                                src={getAvatarUrl(influencer.full_name)}
-                                alt={influencer.full_name}
-                                style={{width:'100%', height:'100%', objectFit:'cover'}}
-                                onError={(e) => { e.target.style.display='none'; }}
-                            />
-                        </div>
-                        <div style={{
-                            position:'absolute', bottom:0, right:0,
-                            background: platformColors[influencer.platform] || '#666',
-                            borderRadius:'50%', width:24, height:24,
-                            display:'flex', alignItems:'center', justifyContent:'center',
-                            fontSize:'0.65rem', border:'2px solid var(--dark)'
-                        }}>
-                            {platformIcons[influencer.platform] || '🌐'}
-                        </div>
-                    </div>
-
-                    <div className="influencer-name">{influencer.full_name}</div>
-                    <div className="influencer-handle">@{influencer.handle.replace('.pb','')}</div>
-
-                    <div style={{margin:'0.6rem 0'}}>
-                        <span className="badge badge-primary">{influencer.platform}</span>
-                        <span className="badge" style={{background:`${nicheColor}22`, color:nicheColor, border:`1px solid ${nicheColor}44`}}>{influencer.niche}</span>
-                    </div>
-
-                    <div style={{background:'rgba(124,58,237,0.1)', border:'1px solid rgba(124,58,237,0.2)', borderRadius:8, padding:'0.4rem 0.8rem', margin:'0.5rem 0', fontSize:'0.82rem', color:'#A78BFA'}}>
-                        ✦ Match Score: <strong>{matchScore}%</strong>
-                    </div>
-
-                    <div className="stats-row">
-                        <div className="stat">
-                            <span className="stat-value">{formatNumber(influencer.followers_count || 0)}</span>
-                            <span className="stat-label">Followers</span>
-                        </div>
-                        <div className="stat">
-                            <span className="stat-value">{influencer.engagement_rate || 0}%</span>
-                            <span className="stat-label">Engagement</span>
-                        </div>
-                        <div className="stat">
-                            <span className="stat-value" style={{color:'#10B981'}}>{formatINR(price)}</span>
-                            <span className="stat-label">Est. Price</span>
-                        </div>
-                    </div>
-                </div>
-
-                {showModal && (
-                    <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                        <div className="modal" onClick={e => e.stopPropagation()} style={{maxWidth:480}}>
-                            <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
-                            <div style={{textAlign:'center', marginBottom:'1.5rem'}}>
-                                <div style={{
-                                    width:110, height:110, borderRadius:'50%', margin:'0 auto 1rem',
-                                    background:`linear-gradient(135deg, ${nicheColor}33, ${nicheColor}55)`,
-                                    border:`3px solid ${nicheColor}66`, overflow:'hidden',
-                                    display:'flex', alignItems:'center', justifyContent:'center'
-                                }}>
-                                    <img src={getAvatarUrl(influencer.full_name)} alt={influencer.full_name}
-                                        style={{width:'100%', height:'100%', objectFit:'cover'}} />
-                                </div>
-                                <h2 style={{fontSize:'1.6rem', color:'var(--text)'}}>{influencer.full_name}</h2>
-                                <p style={{color:'var(--text-muted)', fontSize:'0.9rem'}}>@{influencer.handle.replace('.pb','')}</p>
-                                <p style={{color:'var(--text-muted)', fontSize:'0.9rem', margin:'0.4rem 0'}}>{influencer.bio || 'Content creator'}</p>
-                                <p style={{color:'var(--text-muted)', fontSize:'0.85rem'}}>📍 {influencer.location || 'India'}</p>
-                            </div>
-
-                            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'0.8rem', marginBottom:'1.2rem'}}>
-                                {[
-                                    {label:'Followers', value: formatNumber(influencer.followers_count || 0)},
-                                    {label:'Engagement', value: `${influencer.engagement_rate || 0}%`},
-                                    {label:'Match Score', value: `${matchScore}%`},
-                                ].map(s => (
-                                    <div key={s.label} style={{background:'rgba(255,255,255,0.05)', borderRadius:12, padding:'0.8rem', textAlign:'center', border:'1px solid var(--glass-border)'}}>
-                                        <div style={{fontSize:'1.3rem', fontWeight:800, color:'#A78BFA'}}>{s.value}</div>
-                                        <div style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{s.label}</div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div style={{background:'rgba(255,255,255,0.04)', borderRadius:12, padding:'1rem', marginBottom:'1rem', border:'1px solid var(--glass-border)'}}>
-                                {[
-                                    {k:'Platform', v:`${platformIcons[influencer.platform]} ${influencer.platform}`},
-                                    {k:'Niche', v:influencer.niche},
-                                    {k:'Est. Price per Post', v:formatINR(price)},
-                                ].map(row => (
-                                    <div key={row.k} style={{display:'flex', justifyContent:'space-between', padding:'0.4rem 0', borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
-                                        <span style={{color:'var(--text-muted)', fontSize:'0.9rem'}}>{row.k}</span>
-                                        <span style={{fontWeight:600, color:'var(--text)', fontSize:'0.9rem'}}>{row.v}</span>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div style={{display:'flex', gap:'0.8rem'}}>
-                                <a href={getPlatformLink(influencer.handle, influencer.platform)}
-                                   target="_blank" rel="noreferrer"
-                                   className="btn btn-secondary" style={{flex:1, textAlign:'center', textDecoration:'none'}}>
-                                    View Profile 🔗
-                                </a>
-                                <button className="btn btn-primary" style={{flex:1}}
-                                    onClick={() => { alert(`✅ Collaboration request sent to ${influencer.full_name}!`); setShowModal(false); }}>
-                                    Collaborate 🤝
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-                </>
-            );
-        }
-
-        // Campaign Page
-        function CampaignPage() {
-            const [formData, setFormData] = useState({
-                title: '',
-                description: '',
-                niche: '',
-                platform: '',
-                budget: '',
-                min_followers: ''
-            });
-            
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                
-                axios.post(`${API_BASE_URL}/campaigns`, formData)
-                    .then(response => {
-                        alert('🎉 Campaign Created Successfully!\n\n✅ AI matching engine activated\n✅ Finding best influencers\n\nYou will receive recommendations soon!');
-                        // Reset form
-                        setFormData({
-                            title: '',
-                            description: '',
-                            niche: '',
-                            platform: '',
-                            budget: '',
-                            min_followers: ''
-                        });
-                    })
-                    .catch(error => {
-                        alert('Campaign created! (Demo mode - backend integration needed)');
-                    });
-            };
-            
-            return (
-                <div className="container">
-                    <div className="card">
-                        <h2 style={{marginBottom: '2rem', fontFamily: 'Outfit', fontSize: '2.5rem'}}>
-                            🚀 Create New Campaign
-                        </h2>
-                        
-                        <form onSubmit={handleSubmit}>
-                            <div className="form-group">
-                                <label className="form-label">Campaign Name</label>
-                                <input 
-                                    type="text"
-                                    className="form-input"
-                                    placeholder="e.g., Summer Fashion 2025"
-                                    value={formData.title}
-                                    onChange={(e) => setFormData({...formData, title: e.target.value})}
-                                    required
-                                />
-                            </div>
-                            
-                            <div className="form-group">
-                                <label className="form-label">Description</label>
-                                <textarea 
-                                    className="form-textarea"
-                                    placeholder="Describe your campaign objectives..."
-                                    value={formData.description}
-                                    onChange={(e) => setFormData({...formData, description: e.target.value})}
-                                    required
-                                ></textarea>
-                            </div>
-                            
-                            <div className="form-group">
-                                <label className="form-label">Budget (₹)</label>
-                                <input 
-                                    type="number"
-                                    className="form-input"
-                                    placeholder="500000"
-                                    value={formData.budget}
-                                    onChange={(e) => setFormData({...formData, budget: e.target.value})}
-                                    required
-                                />
-                            </div>
-                            
-                            <div className="form-group">
-                                <label className="form-label">Platform</label>
-                                <select 
-                                    className="form-select"
-                                    value={formData.platform}
-                                    onChange={(e) => setFormData({...formData, platform: e.target.value})}
-                                    required
-                                >
-                                    <option value="">Select Platform</option>
-                                    <option value="instagram">Instagram</option>
-                                    <option value="youtube">YouTube</option>
-                                    <option value="tiktok">TikTok</option>
-                                    <option value="any">Multiple Platforms</option>
-                                </select>
-                            </div>
-                            
-                            <div className="form-group">
-                                <label className="form-label">Target Niche</label>
-                                <select 
-                                    className="form-select"
-                                    value={formData.niche}
-                                    onChange={(e) => setFormData({...formData, niche: e.target.value})}
-                                    required
-                                >
-                                    <option value="">Select Niche</option>
-                                    <option value="Fashion">Fashion</option>
-                                    <option value="Tech">Tech</option>
-                                    <option value="Food">Food</option>
-                                    <option value="Fitness">Fitness</option>
-                                    <option value="Travel">Travel</option>
-                                </select>
-                            </div>
-                            
-                            <div className="form-group">
-                                <label className="form-label">Minimum Followers</label>
-                                <input 
-                                    type="number"
-                                    className="form-input"
-                                    placeholder="10000"
-                                    value={formData.min_followers}
-                                    onChange={(e) => setFormData({...formData, min_followers: e.target.value})}
-                                    required
-                                />
-                            </div>
-                            
-                            <button type="submit" className="btn btn-primary" style={{width: '100%', padding: '1.2rem'}}>
-                                Create Campaign & Find Matches
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            );
-        }
-        
-        // Real Indian Influencer Pricing Calculator
-        function PricingPage() {
-            const [inputs, setInputs] = useState({
-                followers: 100000,
-                engagement_rate: 3.5,
-                platform: 'instagram',
-                niche: 'Fashion'
-            });
-            const [result, setResult] = useState(null);
-
-            // Real Indian influencer pricing rates (INR) based on industry standards
-            // Source: Influencer Marketing Hub India 2024 data
-            const PLATFORM_BASE_RATE = {
-                instagram: { post: 1, story: 0.4, reel: 1.5, carousel: 1.2 },
-                youtube:   { video: 2.5, short: 0.8, livestream: 1.8 },
-                tiktok:    { video: 0.6, live: 0.5 },
-            };
-
-            const NICHE_MULTIPLIER = {
-                'Fashion': 1.3, 'Tech': 1.5, 'Fitness': 1.2,
-                'Food': 1.1, 'Travel': 1.4, 'Entertainment': 1.0,
-            };
-
-            const TIER_RATES = {
-                nano:    { min: 1000,    max: 10000,    cpm: 150  },
-                micro:   { min: 10000,   max: 100000,   cpm: 120  },
-                mid:     { min: 100000,  max: 500000,   cpm: 100  },
-                macro:   { min: 500000,  max: 1000000,  cpm: 80   },
-                mega:    { min: 1000000, max: 10000000, cpm: 60   },
-                celeb:   { min: 10000000,max: Infinity, cpm: 40   },
-            };
-
-            const getTier = (f) => {
-                if (f < 10000) return { name: 'Nano', ...TIER_RATES.nano };
-                if (f < 100000) return { name: 'Micro', ...TIER_RATES.micro };
-                if (f < 500000) return { name: 'Mid-Tier', ...TIER_RATES.mid };
-                if (f < 1000000) return { name: 'Macro', ...TIER_RATES.macro };
-                if (f < 10000000) return { name: 'Mega', ...TIER_RATES.mega };
-                return { name: 'Celebrity', ...TIER_RATES.celeb };
-            };
-
-            const getContentTypes = (platform) => {
-                if (platform === 'instagram') return [
-                    { key: 'post', label: '📸 Static Post', mult: 1.0 },
-                    { key: 'reel', label: '🎬 Reel', mult: 1.5 },
-                    { key: 'story', label: '⏱️ Story (24hr)', mult: 0.4 },
-                    { key: 'carousel', label: '🖼️ Carousel Post', mult: 1.2 },
-                ];
-                if (platform === 'youtube') return [
-                    { key: 'video', label: '🎥 Dedicated Video', mult: 2.5 },
-                    { key: 'integration', label: '📌 Brand Integration', mult: 1.5 },
-                    { key: 'short', label: '⚡ YouTube Short', mult: 0.8 },
-                ];
-                if (platform === 'tiktok') return [
-                    { key: 'video', label: '🎵 TikTok Video', mult: 0.6 },
-                    { key: 'duet', label: '🤝 Duet/Collab', mult: 0.5 },
-                ];
-                return [];
-            };
-
-            const calculateAll = () => {
-                const f = Number(inputs.followers);
-                const er = Number(inputs.engagement_rate);
-                const tier = getTier(f);
-                const nicheMult = NICHE_MULTIPLIER[inputs.niche] || 1.0;
-                const engMult = 1 + (er - 3) * 0.05; // Base engagement is 3%
-                const basePrice = (f / 1000) * tier.cpm * nicheMult * Math.max(0.7, engMult);
-                const contentTypes = getContentTypes(inputs.platform);
-                const breakdown = contentTypes.map(ct => ({
-                    ...ct,
-                    price: Math.round(basePrice * ct.mult),
-                    min: Math.round(basePrice * ct.mult * 0.7),
-                    max: Math.round(basePrice * ct.mult * 1.4),
-                }));
-                setResult({ tier, breakdown, basePrice: Math.round(basePrice), f, er, nicheMult });
-            };
-
-            const contentTypes = getContentTypes(inputs.platform);
-
-            return (
-                <div className="container">
-                    <div style={{textAlign:'center', marginBottom:'2rem'}}>
-                        <h2 style={{fontFamily:'Outfit', fontSize:'2.5rem', background:'linear-gradient(135deg, #6366f1, #ec4899)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent'}}>
-                            💰 Influencer Pricing Calculator
-                        </h2>
-                        <p style={{color:'var(--gray)'}}>Real Indian market rates based on followers, engagement & niche</p>
-                    </div>
-
-                    <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'2rem'}}>
-                        {/* LEFT - Inputs */}
-                        <div className="card">
-                            <h3 style={{fontFamily:'Outfit', fontSize:'1.5rem', marginBottom:'1.5rem'}}>📊 Influencer Details</h3>
-
-                            <div className="form-group">
-                                <label className="form-label">Followers Count</label>
-                                <input type="number" className="form-input"
-                                    value={inputs.followers}
-                                    onChange={e => setInputs({...inputs, followers: e.target.value})}
-                                    placeholder="e.g. 100000" />
-                                <small style={{color:'var(--gray)'}}>Current: {formatNumber(Number(inputs.followers))} followers</small>
-                            </div>
-
-                            <div className="form-group">
-                                <label className="form-label">Engagement Rate (%)</label>
-                                <input type="number" className="form-input" step="0.1" min="0" max="100"
-                                    value={inputs.engagement_rate}
-                                    onChange={e => setInputs({...inputs, engagement_rate: e.target.value})} />
-                                <small style={{color:'var(--gray)'}}>Average Indian: 3-6% | Good: 6%+</small>
-                            </div>
-
-                            <div className="form-group">
-                                <label className="form-label">Platform</label>
-                                <select className="form-select" value={inputs.platform}
-                                    onChange={e => setInputs({...inputs, platform: e.target.value})}>
-                                    <option value="instagram">📸 Instagram</option>
-                                    <option value="youtube">▶️ YouTube</option>
-                                    <option value="tiktok">🎵 TikTok</option>
-                                </select>
-                            </div>
-
-                            <div className="form-group">
-                                <label className="form-label">Niche / Category</label>
-                                <select className="form-select" value={inputs.niche}
-                                    onChange={e => setInputs({...inputs, niche: e.target.value})}>
-                                    <option value="Fashion">👗 Fashion</option>
-                                    <option value="Tech">💻 Tech</option>
-                                    <option value="Fitness">💪 Fitness</option>
-                                    <option value="Food">🍔 Food</option>
-                                    <option value="Travel">✈️ Travel</option>
-                                    <option value="Entertainment">🎭 Entertainment</option>
-                                </select>
-                            </div>
-
-                            <button className="btn btn-primary" style={{width:'100%', padding:'1.2rem', fontSize:'1.1rem'}}
-                                onClick={calculateAll}>
-                                🧮 Calculate Pricing
-                            </button>
-                        </div>
-
-                        {/* RIGHT - Results */}
-                        <div>
-                            {!result ? (
-                                <div className="card" style={{textAlign:'center', padding:'3rem'}}>
-                                    <div style={{fontSize:'4rem', marginBottom:'1rem'}}>💡</div>
-                                    <p style={{color:'var(--gray)', fontSize:'1.1rem'}}>Fill in the details and click Calculate to see pricing breakdown</p>
-                                </div>
-                            ) : (
-                                <>
-                                    {/* Tier Badge */}
-                                    <div className="card" style={{marginBottom:'1rem', background:'linear-gradient(135deg, #6366f1, #ec4899)', color:'white'}}>
-                                        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                                            <div>
-                                                <div style={{fontSize:'0.9rem', opacity:0.9}}>Influencer Tier</div>
-                                                <div style={{fontSize:'2rem', fontWeight:800, fontFamily:'Outfit'}}>{result.tier.name}</div>
-                                                <div style={{fontSize:'0.9rem', opacity:0.9}}>{formatNumber(result.f)} followers • {result.er}% engagement</div>
-                                            </div>
-                                            <div style={{textAlign:'right'}}>
-                                                <div style={{fontSize:'0.9rem', opacity:0.9}}>Base Rate / 1K followers</div>
-                                                <div style={{fontSize:'1.8rem', fontWeight:800}}>₹{result.tier.cpm}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Content Type Breakdown */}
-                                    <div className="card">
-                                        <h3 style={{fontFamily:'Outfit', fontSize:'1.3rem', marginBottom:'1rem'}}>📋 Pricing by Content Type</h3>
-                                        {result.breakdown.map(ct => (
-                                            <div key={ct.key} style={{background:'#f8fafc', borderRadius:12, padding:'1rem', marginBottom:'0.8rem'}}>
-                                                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'0.3rem'}}>
-                                                    <span style={{fontWeight:600}}>{ct.label}</span>
-                                                    <span style={{fontWeight:800, fontSize:'1.2rem', color:'var(--primary)'}}>{formatINR(ct.price)}</span>
-                                                </div>
-                                                <div style={{display:'flex', justifyContent:'space-between'}}>
-                                                    <span style={{fontSize:'0.8rem', color:'var(--gray)'}}>Min: {formatINR(ct.min)}</span>
-                                                    <span style={{fontSize:'0.8rem', color:'var(--gray)'}}>Max: {formatINR(ct.max)}</span>
-                                                </div>
-                                            </div>
-                                        ))}
-
-                                        <div style={{marginTop:'1rem', padding:'1rem', background:'#ede9fe', borderRadius:12, fontSize:'0.85rem', color:'#6366f1'}}>
-                                            💡 <strong>Niche premium:</strong> {inputs.niche} gets {Math.round((result.nicheMult - 1) * 100)}% higher rates than average
-                                        </div>
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-        
-        // Dashboard Page
-        function DashboardPage() {
-            const [campaigns, setCampaigns] = useState([]);
-            const [loading, setLoading] = useState(true);
-
-            useEffect(() => {
-                axios.get(`${API_BASE_URL}/campaigns`, { params: { limit: 10 } })
-                    .then(r => { setCampaigns(r.data); setLoading(false); })
-                    .catch(() => setLoading(false));
-            }, []);
-
-            const nicheColors2 = { Fitness: '#10b981', Fashion: '#ec4899', Tech: '#6366f1', Entertainment: '#f59e0b', Food: '#ef4444', Travel: '#14b8a6' };
-
-            return (
-                <div className="container">
-                    <StatsSection />
-                    <h2 style={{fontFamily:'Outfit', fontSize:'2rem', marginBottom:'1.5rem'}}>📢 Active Campaigns</h2>
-                    {loading ? (
-                        <div className="loading"><div className="spinner"></div>Loading campaigns...</div>
-                    ) : campaigns.length === 0 ? (
-                        <div className="card" style={{textAlign:'center', padding:'3rem'}}>
-                            <p style={{fontSize:'1.2rem', color:'var(--gray)'}}>No campaigns yet. Create one!</p>
-                        </div>
-                    ) : (
-                        <div className="card-grid">
-                            {campaigns.map(c => (
-                                <div key={c.campaign_id} className="card">
-                                    <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'1rem'}}>
-                                        <span className="badge badge-success" style={{background: `${nicheColors2[c.niche] || '#888'}22`, color: nicheColors2[c.niche] || '#888'}}>{c.niche || 'General'}</span>
-                                        <span className="badge" style={{background:'#d1fae5', color:'#065f46'}}>{c.status || 'draft'}</span>
-                                    </div>
-                                    <h3 style={{fontFamily:'Outfit', fontSize:'1.2rem', marginBottom:'0.5rem'}}>{c.title}</h3>
-                                    <p style={{color:'var(--gray)', fontSize:'0.9rem', marginBottom:'1rem'}}>{c.description ? c.description.slice(0, 80) + '...' : ''}</p>
-                                    <div style={{display:'flex', justifyContent:'space-between', marginBottom:'1rem'}}>
-                                        <div>
-                                            <div style={{fontWeight:700, color:'var(--success)', fontSize:'1.1rem'}}>{formatINR(c.budget)}</div>
-                                            <div style={{fontSize:'0.8rem', color:'var(--gray)'}}>Budget</div>
-                                        </div>
-                                        <div>
-                                            <div style={{fontWeight:700, color:'var(--primary)', fontSize:'1.1rem'}}>{c.platform || 'All'}</div>
-                                            <div style={{fontSize:'0.8rem', color:'var(--gray)'}}>Platform</div>
-                                        </div>
-                                        <div>
-                                            <div style={{fontWeight:700, color:'var(--warning)', fontSize:'1.1rem'}}>{c.min_followers ? formatIndian(c.min_followers) : 'Any'}</div>
-                                            <div style={{fontSize:'0.8rem', color:'var(--gray)'}}>Min Followers</div>
-                                        </div>
-                                    </div>
-                                    <button className="btn btn-primary" style={{width:'100%'}}
-                                        onClick={() => alert(`🎯 Finding influencers for:
-${c.title}
-
-Budget: ${formatINR(c.budget)}
-Platform: ${c.platform}
-Niche: ${c.niche}`)}>
-                                        🤖 Find Matching Influencers
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            );
-        }
-        
-        // Indian currency formatter
-        function formatINR(amount) {
-            if (!amount || amount === 0) return '₹0';
-            if (amount >= 10000000) return `₹${(amount / 10000000).toFixed(1)} Cr`;
-            if (amount >= 100000) return `₹${(amount / 100000).toFixed(1)} L`;
-            if (amount >= 1000) return `₹${(amount / 1000).toFixed(1)}K`;
-            return `₹${amount.toLocaleString('en-IN')}`;
-        }
-
-        // Indian follower formatter (for min_followers in campaigns)
-        function formatIndian(num) {
-            if (!num || num === 0) return '0';
-            if (num >= 10000000) return `${(num / 10000000).toFixed(1)} Cr`;
-            if (num >= 100000) return `${(num / 100000).toFixed(1)} L`;
-            if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
-            return num.toString();
-        }
-
-        // Followers formatter - millions format
-        function formatNumber(num) {
-            if (!num || num === 0) return '0';
-            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-            return num.toString();
-        }
-        
-        function getMockInfluencers() {
-            return [
-                { full_name: "Virat Kohli", handle: "virat.kohli", platform: "Instagram", niche: "Fitness", followers_count: 270000000, engagement_rate: 4.2 },
-                { full_name: "Bhuvan Bam", handle: "bhuvan.bam22", platform: "YouTube", niche: "Entertainment", followers_count: 26000000, engagement_rate: 5.8 },
-                { full_name: "Kusha Kapila", handle: "kushakapila", platform: "Instagram", niche: "Fashion", followers_count: 3500000, engagement_rate: 6.2 },
-                { full_name: "Ranveer Allahbadia", handle: "beerbiceps", platform: "YouTube", niche: "Fitness", followers_count: 6000000, engagement_rate: 4.5 },
-                { full_name: "Sejal Kumar", handle: "sejalkumar", platform: "YouTube", niche: "Fashion", followers_count: 1500000, engagement_rate: 7.1 },
-                { full_name: "Tech Burner", handle: "techburner", platform: "YouTube", niche: "Tech", followers_count: 10000000, engagement_rate: 5.3 }
-            ];
-        }
-        
-        // Render App
-        ReactDOM.render(<App />, document.getElementById('root'));
-    </script>
+ReactDOM.render(<App/>,document.getElementById('root'));
+</script>
 </body>
 </html>
